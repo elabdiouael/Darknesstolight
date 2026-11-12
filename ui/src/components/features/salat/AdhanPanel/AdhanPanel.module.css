@@ -1,0 +1,103 @@
+.panel { display: flex; flex-direction: column; gap: 14px; padding: 22px; }
+.head h2 { display: flex; align-items: center; gap: 9px; font-family: var(--font-display); font-size: 1.6rem; color: var(--ivory); }
+:global(html[dir="rtl"]) .head h2 { font-family: var(--font-ar-ui); font-size: 1.25rem; }
+.head h2 svg { color: var(--gold-300); }
+.head p { margin-top: 4px; font-size: 0.88rem; color: var(--text-muted); }
+.label, .field label { font-size: 0.7rem; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold-300); }
+:global(html[dir="rtl"]) .label, :global(html[dir="rtl"]) .field label { letter-spacing: 0; font-size: 0.85rem; }
+.field label b { color: var(--ivory); font-variant-numeric: tabular-nums; }
+
+/* ---- Les voix ---- */
+.voices { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; }
+.voice { display: flex; align-items: center; gap: 4px; padding: 4px; border-radius: 14px; background: rgba(0, 0, 0, 0.24); border: 1px solid var(--border-glass); }
+.voiceOn { border-color: var(--gold-500); background: linear-gradient(120deg, rgba(212, 175, 55, 0.2), rgba(0, 0, 0, 0.24)); box-shadow: var(--glow-gold); }
+.voicePick { flex: 1; min-width: 0; display: flex; align-items: center; gap: 9px; padding: 9px 8px; border: none; background: none; color: var(--ivory); font: inherit; text-align: start; cursor: pointer; }
+.voicePick strong { font-size: 0.84rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.radio { display: grid; place-items: center; width: 18px; height: 18px; flex-shrink: 0; border-radius: 50%; border: 1.5px solid var(--border-gold); color: #1b1305; transition: background 0.25s; }
+.voiceOn .radio { background: linear-gradient(135deg, var(--gold-100), var(--gold-500)); border-color: transparent; }
+.voicePlay { position: relative; display: grid; place-items: center; width: 34px; height: 34px; flex-shrink: 0; border-radius: 11px; border: 1px solid var(--border-glass); background: rgba(255, 255, 255, 0.03); color: var(--gold-300); cursor: pointer; transition: background 0.25s, border-color 0.25s, color 0.25s; }
+.voicePlay:hover { border-color: var(--border-gold); background: rgba(212, 175, 55, 0.14); }
+.playing { color: #062014; border-color: transparent; background: var(--emerald-300); }
+.playing:hover { background: var(--emerald-300); }
+.eq { position: absolute; inset: auto 0 -9px 0; display: flex; justify-content: center; gap: 2px; height: 7px; }
+.eq i { width: 2px; background: var(--emerald-300); border-radius: 2px; transform-origin: bottom; animation: eq 0.7s ease-in-out infinite; }
+.eq i:nth-child(2) { animation-delay: 0.15s; }
+.eq i:nth-child(3) { animation-delay: 0.3s; }
+@keyframes eq { 0%, 100% { transform: scaleY(0.3); } 50% { transform: scaleY(1); } }
+.hint { font-size: 0.76rem; color: var(--text-muted); }
+.url, .field select {
+  padding: 11px 14px; border-radius: 14px; font: inherit; font-size: 0.9rem; color: var(--ivory); outline: none;
+  background: rgba(0, 0, 0, 0.3); border: 1px solid var(--border-glass); transition: border-color 0.25s, box-shadow 0.25s;
+}
+.url:focus, .field select:hover, .field select:focus { border-color: var(--border-gold); box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.12); }
+.field select { cursor: pointer; }
+.field select option { background: #06140e; color: var(--ivory); }
+
+.grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 22px; margin-top: 6px; padding-top: 16px; border-top: 1px solid var(--border-glass); }
+.field { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.volume { display: flex; align-items: center; gap: 10px; color: var(--gold-300); padding: 8px 0; }
+.volume input {
+  -webkit-appearance: none; appearance: none; flex: 1; height: 5px; border-radius: 5px; outline: none; cursor: pointer;
+  background: linear-gradient(90deg, var(--emerald-300), var(--gold-500)) 0 / var(--p) 100% no-repeat, rgba(255, 244, 214, 0.1);
+}
+.volume input::-webkit-slider-thumb { -webkit-appearance: none; width: 16px; height: 16px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, var(--gold-100), var(--gold-500)); box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.18); transition: scale 0.2s var(--ease-lux); }
+.volume input:hover::-webkit-slider-thumb { scale: 1.25; }
+.volume input::-moz-range-thumb { width: 16px; height: 16px; border: 0; border-radius: 50%; background: var(--gold-500); }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chips button {
+  padding: 7px 13px; border-radius: 999px; border: 1px solid var(--border-glass); background: rgba(0, 0, 0, 0.25); color: var(--text-muted);
+  font: inherit; font-size: 0.8rem; font-weight: 700; cursor: pointer; transition: background 0.25s, color 0.25s, border-color 0.25s, scale 0.18s var(--ease-lux);
+}
+.chips button:hover { color: var(--gold-100); border-color: var(--border-gold); }
+.chipOn, .chipOn:hover { color: #1b1305 !important; border-color: transparent !important; background: linear-gradient(135deg, var(--gold-100), var(--gold-500)) !important; }
+.iqama { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; }
+.iqama > div { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 8px 2px; border-radius: 12px; background: rgba(0, 0, 0, 0.25); border: 1px solid var(--border-glass); }
+.iqama small { font-size: 0.66rem; color: var(--text-muted); }
+.iqama span { display: flex; align-items: center; gap: 3px; }
+.iqama b { min-width: 22px; text-align: center; font-size: 0.85rem; color: var(--gold-100); font-variant-numeric: tabular-nums; }
+.iqama button { display: grid; place-items: center; width: 20px; height: 20px; border-radius: 6px; border: 1px solid var(--border-glass); background: none; color: var(--gold-300); cursor: pointer; transition: background 0.2s, border-color 0.2s; }
+.iqama button:hover { background: rgba(212, 175, 55, 0.14); border-color: var(--border-gold); }
+.toggles { display: flex; flex-direction: column; gap: 6px; }
+.toggle {
+  display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 9px 12px; border-radius: 12px;
+  border: 1px solid var(--border-glass); background: rgba(0, 0, 0, 0.25); color: var(--ivory); font: inherit; font-size: 0.82rem; font-weight: 700; text-align: start; cursor: pointer;
+  transition: border-color 0.25s, background 0.25s, scale 0.18s var(--ease-lux);
+}
+.toggle:hover { border-color: var(--border-gold); background: rgba(212, 175, 55, 0.07); }
+.toggle i { position: relative; flex-shrink: 0; width: 30px; height: 17px; border-radius: 999px; background: rgba(255, 244, 214, 0.15); transition: background 0.25s; }
+.toggle i b { position: absolute; top: 2px; left: 2px; width: 13px; height: 13px; border-radius: 50%; background: var(--ivory); transition: transform 0.3s var(--ease-lux); }
+.swOn { background: var(--emerald-300) !important; }
+.swOn b { transform: translateX(13px); }
+.note { font-size: 0.78rem; line-height: 1.6; color: var(--text-dim); }
+
+/* ---- L-écran dyal t-tanbih ---- */
+.ringScrim { position: fixed; inset: 0; z-index: 1200; display: grid; place-items: center; padding: 20px; background: rgba(1, 5, 3, 0.78); backdrop-filter: blur(8px); }
+.ring {
+  position: relative; overflow: hidden; width: min(520px, 100%); max-height: 92vh; overflow-y: auto; display: flex; flex-direction: column; align-items: center; gap: 10px;
+  padding: 40px 28px 28px; border-radius: 28px; text-align: center; border: 1px solid var(--border-gold);
+  background: radial-gradient(90% 60% at 50% 0%, rgba(212, 175, 55, 0.24), transparent 70%), linear-gradient(170deg, rgba(16, 60, 43, 0.98), rgba(4, 14, 10, 0.99));
+  box-shadow: var(--shadow-deep), 0 0 90px -20px rgba(212, 175, 55, 0.6);
+}
+.ringWaves { position: absolute; top: -120px; left: 50%; width: 0; height: 0; pointer-events: none; }
+.ringWaves i { position: absolute; left: -130px; top: 0; width: 260px; height: 260px; border-radius: 50%; border: 1px solid rgba(236, 208, 138, 0.5); animation: wave 3s ease-out infinite; }
+.ringWaves i:nth-child(2) { animation-delay: 1s; }
+.ringWaves i:nth-child(3) { animation-delay: 2s; }
+@keyframes wave { from { transform: scale(0.4); opacity: 0.9; } to { transform: scale(2.4); opacity: 0; } }
+.ringX { position: absolute; top: 14px; inset-inline-end: 14px; }
+.ringAr { position: relative; font-size: 2.2rem; color: var(--gold-100); text-shadow: 0 0 26px rgba(212, 175, 55, 0.6); }
+.ring h2 { position: relative; font-family: var(--font-display); font-size: 1.7rem; color: var(--ivory); }
+:global(html[dir="rtl"]) .ring h2 { font-family: var(--font-ar-ui); font-size: 1.3rem; }
+.ringTime { font-family: var(--font-display); font-size: 3.4rem; line-height: 1; color: var(--gold-100); font-variant-numeric: tabular-nums; }
+.ringIqama { padding: 5px 14px; border-radius: 999px; font-size: 0.82rem; font-weight: 700; color: var(--ivory); border: 1px solid rgba(95, 211, 160, 0.45); background: rgba(95, 211, 160, 0.12); }
+.ringDua { width: 100%; margin-top: 10px; padding: 16px; border-radius: 18px; background: rgba(0, 0, 0, 0.28); border: 1px solid var(--border-glass); display: flex; flex-direction: column; gap: 8px; }
+.ringDua small { font-size: 0.68rem; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; color: var(--emerald-300); }
+.ringDua p { font-size: 1.35rem; line-height: 2.1; color: var(--ivory); }
+.ringDua cite { font-style: normal; font-size: 0.74rem; color: var(--text-muted); }
+.ringBtns { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 8px; }
+
+@media (max-width: 760px) {
+  .grid { grid-template-columns: 1fr; }
+  .voices { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .ringTime { font-size: 2.6rem; }
+}
+@media (prefers-reduced-motion: reduce) { .eq i, .ringWaves i { animation: none; } }

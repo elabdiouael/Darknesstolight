@@ -1,0 +1,11 @@
+.wrap { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.label { display: inline-flex; align-items: center; gap: 6px; font-size: 0.7rem; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold-300); }
+:global(html[dir="rtl"]) .label { letter-spacing: 0; font-size: 0.85rem; }
+.seg { display: flex; padding: 3px; border-radius: 999px; background: rgba(0, 0, 0, 0.3); border: 1px solid var(--border-glass); }
+.seg button {
+  padding: 7px 13px; border: none; border-radius: 999px; background: none; color: var(--text-muted);
+  font: inherit; font-size: 0.78rem; font-weight: 700; cursor: pointer; transition: background 0.25s, color 0.25s, scale 0.18s var(--ease-lux);
+}
+.seg button:hover { color: var(--gold-100); }
+.on, .on:hover { color: #1b1305 !important; background: linear-gradient(135deg, var(--gold-100), var(--gold-500)) !important; }
+.hint { font-size: 0.74rem; color: var(--text-dim); }

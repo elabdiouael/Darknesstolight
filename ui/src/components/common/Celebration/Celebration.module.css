@@ -1,0 +1,39 @@
+.canvas {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 9500;
+  pointer-events: none;
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9400;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  text-align: center;
+  padding: 20px;
+  background: radial-gradient(circle at 50% 45%, rgba(212, 175, 55, 0.22), rgba(2, 8, 5, 0.88) 60%);
+  backdrop-filter: blur(6px);
+  cursor: pointer;
+}
+
+.medal {
+  display: grid;
+  place-items: center;
+  width: 220px;
+  height: 220px;
+  clip-path: polygon(50% 0%, 61% 15%, 79% 9%, 79% 27%, 97% 33%, 87% 50%, 97% 67%, 79% 73%, 79% 91%, 61% 85%, 50% 100%, 39% 85%, 21% 91%, 21% 73%, 3% 67%, 13% 50%, 3% 33%, 21% 27%, 21% 9%, 39% 15%);
+  background: radial-gradient(circle at 35% 30%, var(--gold-100), var(--gold-500) 55%, var(--gold-600));
+  box-shadow: 0 0 80px rgba(212, 175, 55, 0.6);
+}
+.medal span { font-size: 2.1rem; color: #2a1c03; }
+
+.overlay h2 { font-family: var(--font-display); font-size: clamp(2rem, 5vw, 3.2rem); }
+:global(html[dir="rtl"]) .overlay h2 { font-family: var(--font-ar-ui); }
+.overlay p { color: var(--text-muted); }

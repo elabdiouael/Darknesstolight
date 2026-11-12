@@ -1,0 +1,78 @@
+.card {
+  position: relative;
+  overflow: hidden;
+  padding: 28px clamp(20px, 4vw, 40px);
+  background:
+    radial-gradient(70% 90% at 50% 0%, rgba(212, 175, 55, 0.16), transparent 65%),
+    linear-gradient(170deg, rgba(14, 60, 42, 0.7), rgba(4, 14, 10, 0.85));
+  border-color: var(--border-gold);
+}
+
+.ornament {
+  position: absolute;
+  inset-inline-end: -20px;
+  top: -40px;
+  font-size: 10rem;
+  line-height: 1;
+  color: var(--gold-500);
+  opacity: 0.06;
+  pointer-events: none;
+}
+
+.head { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+.kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold-300);
+}
+:global(html[dir="rtl"]) .kicker { letter-spacing: 0; font-size: 0.95rem; }
+.ref { font-size: 0.85rem; font-weight: 700; color: var(--text-muted); }
+
+.ar {
+  margin: 20px 0 12px;
+  font-size: clamp(1.7rem, 3vw, 2.3rem);
+  line-height: 2.1;
+  text-align: center;
+  color: var(--gold-100);
+  text-shadow: 0 0 26px rgba(212, 175, 55, 0.4);
+}
+.trans { text-align: center; color: var(--text-muted); line-height: 1.7; max-width: 760px; margin: 0 auto; }
+
+.actions { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
+
+.write { display: flex; flex-direction: column; gap: 10px; overflow: hidden; margin-top: 16px; max-width: 760px; margin-inline: auto; }
+.textarea {
+  width: 100%;
+  min-height: 90px;
+  margin-top: 4px;
+  padding: 12px 14px;
+  resize: vertical;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-glass);
+  background: rgba(0, 0, 0, 0.3);
+  color: var(--ivory);
+  font: inherit;
+  line-height: 1.6;
+  outline: none;
+}
+.textarea:focus { border-color: var(--gold-500); box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.12); }
+
+.skel { display: flex; flex-direction: column; align-items: center; gap: 14px; margin: 26px 0; }
+.skel span {
+  width: 80%;
+  height: 22px;
+  border-radius: 10px;
+  background: linear-gradient(100deg, rgba(255, 255, 255, 0.03) 30%, rgba(212, 175, 55, 0.12) 50%, rgba(255, 255, 255, 0.03) 70%);
+  background-size: 200% 100%;
+  animation: shimmer 1.6s infinite;
+}
+.skel span + span { width: 55%; }
+@keyframes shimmer { to { background-position: -200% 0; } }
+
+.spin { animation: spin 0.9s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }

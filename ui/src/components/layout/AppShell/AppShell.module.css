@@ -1,0 +1,329 @@
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  padding: 14px 20px 18px;
+  /* Fondu bach l-text ma ybanch mn tehtha mli kan-scrolliw */
+  background: linear-gradient(to bottom, rgba(3, 10, 7, 0.95) 45%, rgba(3, 10, 7, 0));
+  transition: padding 0.35s ease;
+}
+.compact { padding-top: 8px; padding-bottom: 10px; }
+
+.bar {
+  --mx: 50%;
+  --my: 50%;
+  backdrop-filter: blur(14px) saturate(150%);
+  -webkit-backdrop-filter: blur(14px) saturate(150%);
+  max-width: 1280px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 10px 14px 10px 18px;
+  border-radius: 999px;
+  background: linear-gradient(120deg, rgba(10, 36, 26, 0.72), rgba(4, 14, 10, 0.78));
+  position: relative;
+  isolation: isolate;
+  transition: padding 0.35s ease, max-width 0.45s ease, box-shadow 0.35s ease, transform 0.35s ease;
+  box-shadow: 0 18px 50px -24px rgba(0, 0, 0, 0.9), inset 0 1px 0 rgba(255, 244, 214, 0.08);
+}
+/* Bordure dhahabiya kat-dour: l-gradient tabt w kaydour b transform (GPU, 0 repaint)
+   — 9bel kanet b @property animé = repaint dyal l-navbar kamla f kol frame */
+.barBorder {
+  position: absolute;
+  inset: 0;
+  padding: 1px;
+  border-radius: inherit;
+  overflow: hidden;
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  z-index: -1;
+}
+.barBorder i {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 104%;
+  aspect-ratio: 1;
+  margin: -52% 0 0 -52%;
+  background: conic-gradient(transparent 0 62%, rgba(255, 228, 160, 0.95) 72%, rgba(212, 175, 55, 0.4) 80%, transparent 90%);
+  animation: navBorder 7s linear infinite;
+  will-change: transform;
+}
+@keyframes navBorder { to { transform: rotate(360deg); } }
+.bar:hover .barBorder i { animation-duration: 3.5s; }
+
+/* Spotlight kaytbe3 souris */
+.barSpot {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(220px circle at var(--mx) var(--my), rgba(255, 236, 180, 0.13), transparent 70%);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+  z-index: -1;
+}
+.bar:hover .barSpot { opacity: 1; }
+
+/* Khett dyal progress dyal scroll */
+.barProgress {
+  position: absolute;
+  left: 26px;
+  right: 26px;
+  bottom: 0;
+  height: 2px;
+  border-radius: 2px;
+  transform-origin: left;
+  background: linear-gradient(90deg, var(--emerald-300), var(--gold-300), var(--gold-100));
+  box-shadow: 0 0 10px rgba(212, 175, 55, 0.7);
+  pointer-events: none;
+}
+:global(html[dir="rtl"]) .barProgress { transform-origin: right; }
+
+.barGlow {
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background: radial-gradient(60% 140% at 50% 120%, rgba(212, 175, 55, 0.16), transparent 70%);
+  pointer-events: none;
+  z-index: -1;
+}
+.compact .bar {
+  max-width: 1080px;
+  padding-top: 6px;
+  padding-bottom: 6px;
+  box-shadow: 0 22px 60px -20px rgba(0, 0, 0, 0.95), 0 0 0 1px rgba(212, 175, 55, 0.12), inset 0 1px 0 rgba(255, 244, 214, 0.1);
+}
+.compact .brandText em { max-height: 0; opacity: 0; }
+
+.brand { display: flex; align-items: center; gap: 12px; }
+
+/* Logo 3D: najma kat-dour f l-3om9 (rotateY) m3a halo */
+.logo {
+  position: relative;
+  display: grid;
+  place-items: center;
+  perspective: 300px;
+}
+.logoSvg {
+  filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.55));
+  animation: logoSpin3d 9s cubic-bezier(0.6, 0, 0.4, 1) infinite;
+  transform-style: preserve-3d;
+}
+.logoHalo {
+  position: absolute;
+  inset: -8px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 220, 140, 0.35), transparent 65%);
+  animation: logoPulse 3.2s ease-in-out infinite;
+}
+.brand:hover .logoSvg { animation-duration: 2.4s; }
+@keyframes logoSpin3d {
+  0% { transform: rotateY(0) rotateZ(0); }
+  50% { transform: rotateY(180deg) rotateZ(45deg); }
+  100% { transform: rotateY(360deg) rotateZ(90deg); }
+}
+@keyframes logoPulse { 50% { transform: scale(1.25); opacity: 0.5; } }
+
+.brandText { display: flex; flex-direction: column; line-height: 1.05; }
+.brandText strong {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--gold-100);
+}
+.brandText em {
+  font-style: normal;
+  font-size: 0.85rem;
+  color: var(--gold-300);
+  opacity: 0.8;
+  line-height: 1.6;
+  max-height: 2.2em;
+  overflow: hidden;
+  transition: max-height 0.35s ease, opacity 0.35s ease;
+}
+
+.nav { display: flex; gap: 6px; margin-inline-start: auto; }
+
+.link {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 16px;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  transition: color 0.3s, transform 0.25s var(--ease-lux);
+}
+.link > *:not(.pill):not(.hoverPill) { position: relative; z-index: 1; }
+.link:active { transform: scale(0.96); }
+.hoverPill {
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  background: rgba(236, 208, 138, 0.09);
+  box-shadow: inset 0 0 0 1px rgba(236, 208, 138, 0.2);
+}
+.link::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 3px;
+  width: 0;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold-300), transparent);
+  transform: translateX(-50%);
+  transition: width 0.3s ease;
+}
+.link:hover::after { width: 60%; }
+.active::after { display: none; }
+.link:hover { color: var(--gold-100); }
+.link:hover svg { transform: translateY(-1px) rotate(-6deg); }
+.link svg { transition: transform 0.3s ease; }
+.active { color: #1b1305; }
+.active:hover { color: #1b1305; }
+
+.pill {
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--gold-100), var(--gold-500));
+  box-shadow: 0 6px 22px -6px rgba(212, 175, 55, 0.8);
+}
+
+.right { display: flex; align-items: center; gap: 10px; }
+
+.stats {
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid var(--border-glass);
+}
+.stats span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 11px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--gold-100);
+}
+.stats span svg { color: var(--gold-300); }
+.stats span + span svg { color: #ffb36b; }
+
+.main {
+  position: relative;
+  z-index: 1;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 36px 20px 120px;
+}
+
+/* ---- Dock mobile (l-ta7t) ---- */
+.dock { display: none; }
+
+@media (max-width: 760px) {
+  .hasDock .nav { display: none; }
+  .hasDock .right { margin-inline-start: auto; }
+  .withDock { padding-bottom: 130px; }
+  .dock {
+    position: fixed;
+    z-index: 60;
+    left: 12px;
+    right: 12px;
+    bottom: calc(12px + env(safe-area-inset-bottom));
+    display: flex;
+    justify-content: space-around;
+    padding: 7px;
+    border-radius: 24px;
+    background: linear-gradient(160deg, rgba(14, 42, 30, 0.86), rgba(4, 14, 10, 0.92));
+    border: 1px solid rgba(212, 175, 55, 0.22);
+    backdrop-filter: blur(18px) saturate(1.4);
+    -webkit-backdrop-filter: blur(18px) saturate(1.4);
+    box-shadow: 0 20px 50px -14px rgba(0, 0, 0, 0.9), inset 0 1px 0 rgba(255, 244, 214, 0.1);
+  }
+  .dockLink {
+    position: relative;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    padding: 8px 4px 7px;
+    border-radius: 18px;
+    color: var(--text-muted);
+    font-size: 0.68rem;
+    font-weight: 700;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .dockLink > *:not(.dockPill) { position: relative; z-index: 1; }
+  .dockIcon { display: grid; place-items: center; }
+  .dockOn { color: #1b1305; }
+  .dockPill {
+    position: absolute;
+    inset: 0;
+    border-radius: 18px;
+    background: linear-gradient(135deg, var(--gold-100), var(--gold-500));
+    box-shadow: 0 8px 24px -8px rgba(212, 175, 55, 0.9);
+  }
+  .dockLabel { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+}
+
+@media (max-width: 560px) {
+  .brandText { display: none; }
+  .bar { gap: 8px; padding: 8px 10px; }
+  .right { gap: 6px; }
+  .nav { gap: 2px; }
+  .right :global(.icon-btn) { width: 34px; height: 34px; }
+}
+
+@media (max-width: 860px) {
+  .brandText em, .stats { display: none; }
+  .link span:not(.pill):not(.hoverPill) { display: none; }
+  .link { padding: 10px 12px; }
+  .header { padding: 10px 10px 0; }
+  .main { padding: 24px 14px 120px; }
+}
+
+/* 4 liens (Khatmas, Hifd, Adhkar, Profil): icônes ghir f les écrans moyens */
+@media (max-width: 1080px) {
+  .link span:not(.pill):not(.hoverPill) { display: none; }
+  .link { padding: 10px 12px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .barBorder i, .logoSvg, .logoHalo { animation: none; }
+}
+/* Smeya jdida twila: ma kat-tqesmch 3la jouj stour */
+.brandText strong { white-space: nowrap; font-size: 1.12rem; }
+.brandText em { font-size: 0.8rem; }
+.link { white-space: nowrap; }
+.compact .bar { max-width: 1180px; }
+@media (max-width: 1240px) { .brandText strong { font-size: 1rem; } }
+
+/* 5 liens: les labels kay-tkhebbaw bekri chwiya */
+@media (max-width: 1340px) {
+  .link span:not(.pill):not(.hoverPill) { display: none; }
+  .link { padding: 10px 12px; }
+}
+
+/* 6 liens: f l-écrans l-wasta ghir les icônes, w dock mobile b labels sghar */
+@media (max-width: 1480px) {
+  .link span:not(.pill):not(.hoverPill) { display: none; }
+  .link { padding: 10px 12px; }
+}
+@media (max-width: 760px) { .dockLabel { font-size: 0.6rem; } .dockLink { padding: 8px 2px 7px; } }
+
+/* 7 liens: icônes ghir, w l-label kay-ban ghir f l-lien l-actif (f hover kayn title) */
+.link:not(.active) span:not(.pill):not(.hoverPill) { display: none; }
+.link:not(.active) { padding: 10px 12px; }
+@media (min-width: 900px) { .active span:not(.pill):not(.hoverPill) { display: inline !important; } .active { padding: 9px 16px !important; } }

@@ -1,0 +1,329 @@
+/* ============ From Darknesses to Light — Design system "Nour" ============ */
+:root {
+  /* Fonds: vert nuit profond */
+  --bg-0: #030a07;
+  --bg-1: #06140e;
+  --bg-2: #0a2018;
+
+  /* Vert dyal din — émeraude */
+  --emerald-900: #072a1d;
+  --emerald-700: #0e5a3d;
+  --emerald-500: #17895a;
+  --emerald-300: #5fd3a0;
+
+  /* Or / Nour */
+  --gold-600: #b8922f;
+  --gold-500: #d4af37;
+  --gold-300: #ecd08a;
+  --gold-100: #fff4d6;
+
+  --ivory: #f5eedb;
+  --text-main: #f5eedb;
+  --text-muted: #9fb3a7;
+  --text-dim: #6b8276;
+  --danger: #ff8a7a;
+
+  --glass: rgba(9, 30, 22, 0.55);
+  --glass-strong: rgba(7, 24, 18, 0.82);
+  --border-glass: rgba(236, 208, 138, 0.14);
+  --border-gold: rgba(236, 208, 138, 0.38);
+
+  --glow-gold: 0 0 24px rgba(212, 175, 55, 0.35), 0 0 64px rgba(212, 175, 55, 0.12);
+  --shadow-deep: 0 24px 60px -20px rgba(0, 0, 0, 0.75);
+
+  --radius-lg: 22px;
+  --radius-md: 14px;
+  --radius-sm: 10px;
+
+  --font-ui: "Manrope", "Segoe UI", system-ui, sans-serif;
+  --font-display: "Cormorant Garamond", "Times New Roman", serif;
+  --font-quran: "Amiri Quran", "Amiri", "Scheherazade New", serif;
+  --font-ar-ui: "Noto Kufi Arabic", "Manrope", sans-serif;
+
+  --ease-lux: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* Compat m3a l-components l-9dam */
+  --bg-dark: var(--bg-0);
+  --bg-glass: var(--glass);
+  --accent-cyan: var(--gold-300);
+  --accent-blue: var(--emerald-700);
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html {
+  color-scheme: dark;
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  background:
+    radial-gradient(1200px 700px at 85% -10%, rgba(23, 137, 90, 0.18), transparent 60%),
+    radial-gradient(900px 600px at -10% 110%, rgba(212, 175, 55, 0.08), transparent 60%),
+    var(--bg-0);
+  color: var(--text-main);
+  font-family: var(--font-ui);
+  -webkit-font-smoothing: antialiased;
+  font-variant-numeric: lining-nums;
+  overflow-x: hidden;
+}
+
+html[dir="rtl"] body {
+  font-family: var(--font-ar-ui);
+}
+
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; }
+input { font: inherit; }
+
+::selection { background: rgba(212, 175, 55, 0.35); color: var(--gold-100); }
+
+/* Scrollbar dorée fine */
+* { scrollbar-width: thin; scrollbar-color: rgba(212, 175, 55, 0.35) transparent; }
+*::-webkit-scrollbar { width: 8px; height: 8px; }
+*::-webkit-scrollbar-thumb { background: rgba(212, 175, 55, 0.3); border-radius: 8px; }
+
+/* ===== Utilitaires globaux ===== */
+.glass-panel {
+  position: relative;
+  /* Bla backdrop-filter: t7t l-panels kayn canvas 3D kayt7errek f kol frame, w kol panel b blur
+     kan kay-3awd y-7seb l-blur dyalo 60 merra f t-tanya (hada howa li kan kay-tiyye7 l-fps).
+     L-blur b9a ghir f l-navbar / dock / modals. */
+  background: linear-gradient(160deg, rgba(14, 48, 35, 0.8), rgba(6, 20, 14, 0.86));
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-deep), inset 0 1px 0 rgba(255, 244, 214, 0.06);
+}
+
+/* Bordure lumineuse dorée animée (kat-tban f hover) */
+.nour-border {
+  position: relative;
+  isolation: isolate;
+}
+.nour-border::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: conic-gradient(from var(--nour-angle, 0deg), transparent 0deg, rgba(236, 208, 138, 0.9) 60deg, transparent 140deg, transparent 220deg, rgba(95, 211, 160, 0.6) 280deg, transparent 360deg);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.5s var(--ease-lux);
+  animation: nourSpin 6s linear infinite;
+  /* Kat-dour ghir f hover: @property animé = repaint f kol frame, 7ta ila kanet mkhbiya */
+  animation-play-state: paused;
+  pointer-events: none;
+  z-index: -1;
+}
+.nour-border:hover::before { opacity: 1; animation-play-state: running; }
+
+@property --nour-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+@keyframes nourSpin { to { --nour-angle: 360deg; } }
+
+.gold-text {
+  background: linear-gradient(100deg, var(--gold-600) 0%, var(--gold-100) 40%, var(--gold-300) 60%, var(--gold-600) 100%);
+  background-size: 220% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: goldSheen 7s ease-in-out infinite;
+}
+@keyframes goldSheen {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+.btn-gold {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 13px 22px;
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: #1c1405;
+  background: linear-gradient(135deg, var(--gold-100), var(--gold-500) 55%, var(--gold-600));
+  box-shadow: 0 10px 30px -10px rgba(212, 175, 55, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  transition: transform 0.35s var(--ease-lux), box-shadow 0.35s var(--ease-lux), filter 0.35s;
+}
+.btn-gold { position: relative; overflow: hidden; isolation: isolate; }
+/* Lam3a (shine) kat-douz 3la l-bouton */
+.btn-gold::after {
+  content: "";
+  position: absolute;
+  top: -50%;
+  bottom: -50%;
+  left: -60%;
+  width: 40%;
+  transform: skewX(-22deg) translateX(0);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.75), transparent);
+  opacity: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+.btn-gold:hover::after { animation: btnShine 0.9s var(--ease-lux); }
+@keyframes btnShine {
+  0% { opacity: 0; transform: skewX(-22deg) translateX(0); }
+  20% { opacity: 1; }
+  100% { opacity: 0; transform: skewX(-22deg) translateX(420%); }
+}
+.btn-gold:hover { transform: translateY(-2px); box-shadow: 0 16px 40px -10px rgba(212, 175, 55, 0.85), inset 0 1px 0 rgba(255, 255, 255, 0.6); }
+.btn-gold:active { transform: translateY(0) scale(0.96); transition-duration: 0.12s; }
+.btn-ghost:active, .icon-btn:active { transform: scale(0.95); transition-duration: 0.12s; }
+:is(.btn-gold, .btn-ghost, .icon-btn):focus-visible { outline: 2px solid var(--gold-300); outline-offset: 3px; }
+.btn-gold:disabled { filter: grayscale(0.6) brightness(0.7); cursor: not-allowed; transform: none; }
+
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 12px 20px;
+  border-radius: 999px;
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--gold-300);
+  background: rgba(212, 175, 55, 0.06);
+  border: 1px solid var(--border-gold);
+  transition: background 0.3s, transform 0.35s var(--ease-lux), box-shadow 0.35s;
+}
+.btn-ghost:hover { background: rgba(212, 175, 55, 0.14); box-shadow: var(--glow-gold); transform: translateY(-1px); }
+
+.icon-btn {
+  display: inline-grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  border: 1px solid var(--border-glass);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--gold-300);
+  cursor: pointer;
+  transition: all 0.3s var(--ease-lux);
+}
+.icon-btn:hover { border-color: var(--border-gold); background: rgba(212, 175, 55, 0.1); }
+
+.quran-text {
+  font-family: var(--font-quran);
+  direction: rtl;
+}
+
+/* Motif géométrique (étoile 8 branches) en fond subtil */
+.pattern-bg {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='none' stroke='%23d4af37' stroke-opacity='0.07'%3E%3Cpath d='M40 8l9 23 23 9-23 9-9 23-9-23-23-9 23-9z'/%3E%3Crect x='22' y='22' width='36' height='36' transform='rotate(45 40 40)'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+}
+
+/* Loader global */
+.spin-anim { color: var(--gold-300); animation: spin-global 0.9s linear infinite; }
+@keyframes spin-global { to { transform: rotate(360deg); } }
+
+/* ===== Tajweed (alquran.cloud) — alwan mbeddlin chwiya bach yban f l-fond l-ghamed ===== */
+.tj { transition: filter 0.3s; }
+.tj-h, .tj-s, .tj-l, .tj-d, .tj-b { color: #9aa3a0; }
+.tj-n { color: #7fa2ff; }
+.tj-p { color: #8a95ff; }
+.tj-m { color: #6c7bff; }
+.tj-o { color: #6f8fff; }
+.tj-q { color: #ff5a62; }
+.tj-c { color: #ff5fe6; }
+.tj-f { color: #d06bff; }
+.tj-w { color: #8fe04a; }
+.tj-i { color: #4fd3ff; }
+.tj-a { color: #34d1a6; }
+.tj-u { color: #6ccf3c; }
+.tj-g { color: #ff9a4a; }
+/* Thèmes clairs (wr9a fat7a): alwan ghamqin */
+:is([data-theme="parchment"], [data-theme="sepia"], [data-theme="madina"], [data-theme="andalus"], [data-theme="rose"]) .tj-n { color: #3d5fe0; }
+:is([data-theme="parchment"], [data-theme="sepia"], [data-theme="madina"], [data-theme="andalus"], [data-theme="rose"]) .tj-p { color: #3040d8; }
+:is([data-theme="parchment"], [data-theme="sepia"], [data-theme="madina"], [data-theme="andalus"], [data-theme="rose"]) .tj-m { color: #000eaa; }
+:is([data-theme="parchment"], [data-theme="sepia"], [data-theme="madina"], [data-theme="andalus"], [data-theme="rose"]) .tj-o { color: #2144c1; }
+:is([data-theme="parchment"], [data-theme="sepia"], [data-theme="madina"], [data-theme="andalus"], [data-theme="rose"]) .tj-q { color: #c8000a; }
+:is([data-theme="parchment"], [data-theme="sepia"], [data-theme="madina"], [data-theme="andalus"], [data-theme="rose"]) .tj-c { color: #b8009e; }
+:is([data-theme="parchment"], [data-theme="sepia"], [data-theme="madina"], [data-theme="andalus"], [data-theme="rose"]) .tj-f { color: #8a00a0; }
+:is([data-theme="parchment"], [data-theme="sepia"], [data-theme="madina"], [data-theme="andalus"], [data-theme="rose"]) .tj-w { color: #3f8f00; }
+:is([data-theme="parchment"], [data-theme="sepia"], [data-theme="madina"], [data-theme="andalus"], [data-theme="rose"]) .tj-i { color: #0089c2; }
+:is([data-theme="parchment"], [data-theme="sepia"], [data-theme="madina"], [data-theme="andalus"], [data-theme="rose"]) .tj-a { color: #12795f; }
+:is([data-theme="parchment"], [data-theme="sepia"], [data-theme="madina"], [data-theme="andalus"], [data-theme="rose"]) .tj-u { color: #2f7a00; }
+:is([data-theme="parchment"], [data-theme="sepia"], [data-theme="madina"], [data-theme="andalus"], [data-theme="rose"]) .tj-g { color: #d86200; }
+:is([data-theme="parchment"], [data-theme="sepia"], [data-theme="madina"], [data-theme="andalus"], [data-theme="rose"]) .tj-h, :is([data-theme="parchment"], [data-theme="sepia"], [data-theme="madina"], [data-theme="andalus"], [data-theme="rose"]) .tj-s, :is([data-theme="parchment"], [data-theme="sepia"], [data-theme="madina"], [data-theme="andalus"], [data-theme="rose"]) .tj-l { color: #8d8676; }
+.tj-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: currentColor; box-shadow: 0 0 8px currentColor; }
+
+/* ===== Mode focus (lecture) ===== */
+body.ltd-focus [data-shell-header] { opacity: 0; transform: translateY(-120%); pointer-events: none; }
+[data-shell-header] { transition: opacity 0.5s var(--ease-lux), transform 0.6s var(--ease-lux); }
+
+/* ===== Cartouche dyal s-sourate (Ornaments.tsx) ===== */
+.surah-banner { display: grid; place-items: center; min-height: 92px; padding: 0 16%; }
+.surah-banner-name { position: relative; font-size: 2.2rem; line-height: 1.6; color: var(--ink-gold, var(--gold-100)); text-shadow: 0 0 22px rgba(212, 175, 55, 0.35); }
+.surah-banner-side {
+  position: absolute; top: 50%; translate: 0 -50%;
+  font-family: var(--font-quran); font-size: 0.95rem; color: var(--frame, var(--gold-300)); opacity: 0.9;
+}
+@media (max-width: 640px) { .surah-banner-name { font-size: 1.6rem; } .surah-banner-side { display: none; } }
+/* ===== Interactions globales: hover (tlou3 + spotlight) w "refss" (press) =====
+   translate / scale (propriétés individuelles) -> ma kay-tdarbouch m3a transform dyal framer-motion */
+:where(button, [role="button"], .btn-gold, .btn-ghost, .icon-btn) { transition: scale 0.18s var(--ease-lux); }
+:where(button, .btn-gold, .btn-ghost, .icon-btn):not(:disabled):active { scale: 0.95; }
+
+.fx-card {
+  position: relative;
+  transition: translate 0.45s var(--ease-lux), scale 0.2s var(--ease-lux), box-shadow 0.45s var(--ease-lux), border-color 0.45s;
+}
+.fx-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.4s;
+  background: radial-gradient(260px circle at var(--px, 50%) var(--py, 50%), rgba(255, 244, 214, 0.1), transparent 70%);
+}
+@media (hover: hover) {
+  .fx-card:hover {
+    translate: 0 -4px;
+    border-color: var(--border-gold);
+    box-shadow: 0 26px 60px -28px rgba(212, 175, 55, 0.5), var(--shadow-deep), inset 0 1px 0 rgba(255, 244, 214, 0.1);
+  }
+  .fx-card:hover::after { opacity: 1; }
+}
+.fx-card:active { scale: 0.985; translate: 0 -1px; }
+
+/* Icône kat-t7errek mli l-carte dyalha f hover */
+.fx-card .fx-icon { transition: transform 0.5s var(--ease-lux), filter 0.5s; }
+.fx-card:hover .fx-icon { transform: translateY(-2px) scale(1.14) rotate(-6deg); filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.7)); }
+
+
+/* ================= Performance: l-app kat-khfef 7sab l-jihaz (data-perf 3la <html>) =================
+   medium: bla blur dyal l-background (ghali bezzaf f téléphone) w bla animations dayma dyal d-décor
+   low   : zid 3lihom: bla ombres kbar, bla halos, w les cartes li barra l-écran ma kay-t-rendrawch */
+html:is([data-perf="medium"], [data-perf="low"]) * { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
+html:is([data-perf="medium"], [data-perf="low"]) :is(.gold-text, .nour-border::before, [class*="logoSvg"], [class*="logoHalo"], [class*="barBorder"] i, [class*="aura"], [class*="Glow"], [class*="sheen"]::before) { animation: none !important; }
+html:is([data-perf="medium"], [data-perf="low"]) .gold-text { background-position: 30% 50%; }
+html[data-perf="low"] :is(.glass-panel, .fx-card) { box-shadow: none !important; }
+html[data-perf="low"] .fx-card::after { display: none; }
+html[data-perf="low"] :is([class*="aura"], [class*="Glow"], [class*="halo"], [class*="Halo"]) { display: none !important; }
+html[data-perf="low"] .fx-card { content-visibility: auto; contain-intrinsic-size: auto 220px; }
+html[data-perf="low"] body { background: var(--bg-0); }
+html[data-perf="low"] * { text-shadow: none !important; }
+html:is([data-perf="medium"], [data-perf="low"]) .nour-border::before { animation: none !important; }
+html:is([data-perf="medium"], [data-perf="low"]) [class*="sheen"]::before { animation: none !important; }

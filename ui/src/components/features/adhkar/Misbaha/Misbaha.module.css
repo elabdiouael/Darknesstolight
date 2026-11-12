@@ -1,0 +1,88 @@
+.wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 24px;
+  background:
+    radial-gradient(70% 90% at 30% 50%, rgba(23, 137, 90, 0.2), transparent 70%),
+    radial-gradient(60% 80% at 100% 0%, rgba(212, 175, 55, 0.14), transparent 70%),
+    var(--glass);
+}
+.head { display: flex; justify-content: space-between; gap: 14px; align-items: flex-start; }
+.head h2 { font-family: var(--font-display); font-size: 2rem; color: var(--gold-100); line-height: 1; }
+:global(html[dir="rtl"]) .head h2 { font-family: var(--font-ar-ui); font-size: 1.4rem; }
+.head p { margin-top: 6px; font-size: 0.88rem; color: var(--text-muted); }
+
+.phrases { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; }
+.phrases::-webkit-scrollbar { display: none; }
+.phrases button {
+  flex-shrink: 0;
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--border-glass);
+  background: rgba(0, 0, 0, 0.25);
+  color: var(--gold-300);
+  font-size: 1.05rem;
+  cursor: pointer;
+  transition: all 0.25s var(--ease-lux);
+}
+.phrases button:hover { border-color: var(--border-gold); }
+.on { color: #1b1305 !important; background: linear-gradient(135deg, var(--gold-100), var(--gold-500)) !important; border-color: transparent !important; box-shadow: var(--glow-gold); }
+
+.body { display: grid; grid-template-columns: auto 1fr; gap: 28px; align-items: center; }
+
+.dial {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: min(280px, 72vw);
+  aspect-ratio: 1;
+  border: 0;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 50% 50%, rgba(3, 10, 7, 0.95) 0 52%, transparent 53%),
+    radial-gradient(circle at 35% 30%, rgba(95, 211, 160, 0.22), rgba(7, 42, 29, 0.6) 70%);
+  box-shadow: 0 0 0 1px var(--border-gold), 0 30px 60px -20px rgba(0, 0, 0, 0.8), inset 0 0 40px rgba(0, 0, 0, 0.6);
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.15s var(--ease-lux);
+}
+.dial:active { transform: scale(0.97); }
+.beads { position: absolute; inset: 0; width: 100%; height: 100%; }
+.bead { fill: rgba(236, 208, 138, 0.16); stroke: rgba(236, 208, 138, 0.25); transition: all 0.3s var(--ease-lux); }
+.beadOn { fill: var(--gold-300); stroke: var(--gold-100); filter: drop-shadow(0 0 6px rgba(212, 175, 55, 0.9)); transition: all 0.3s var(--ease-lux); }
+.ripple { position: absolute; inset: 22%; border-radius: 50%; border: 2px solid var(--gold-300); pointer-events: none; }
+.center { position: relative; display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.phrase { font-size: 1.15rem; color: var(--emerald-300); max-width: 160px; text-align: center; line-height: 1.6; }
+.center strong { font-family: var(--font-display); font-size: 4rem; font-weight: 700; line-height: 1; color: var(--gold-100); text-shadow: 0 0 30px rgba(212, 175, 55, 0.6); font-variant-numeric: tabular-nums; }
+.center small { font-size: 0.85rem; font-weight: 800; color: var(--text-muted); }
+
+.side { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.label { font-size: 0.7rem; font-weight: 800; letter-spacing: 0.16em; text-transform: uppercase; color: var(--gold-300); }
+:global(html[dir="rtl"]) .label { letter-spacing: 0; font-size: 0.85rem; }
+.targets { display: flex; flex-wrap: wrap; gap: 6px; }
+.targets button {
+  display: inline-grid;
+  place-items: center;
+  min-width: 52px;
+  height: 36px;
+  padding: 0 12px;
+  border-radius: 12px;
+  border: 1px solid var(--border-glass);
+  background: rgba(0, 0, 0, 0.25);
+  color: var(--ivory);
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+}
+.kpis { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.kpis div { padding: 14px; border-radius: 16px; background: rgba(0, 0, 0, 0.25); border: 1px solid var(--border-glass); display: flex; flex-direction: column; }
+.kpis strong { font-family: var(--font-display); font-size: 1.9rem; line-height: 1; color: var(--gold-100); }
+.kpis span { font-size: 0.75rem; color: var(--text-muted); margin-top: 4px; }
+.hint { font-size: 0.78rem; color: var(--text-dim); }
+
+@media (max-width: 760px) {
+  .body { grid-template-columns: 1fr; justify-items: center; }
+  .side { width: 100%; }
+}

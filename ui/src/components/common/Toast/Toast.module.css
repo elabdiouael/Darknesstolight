@@ -1,0 +1,33 @@
+.stack {
+  position: fixed;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  z-index: 9999;
+  pointer-events: none;
+}
+
+.toast {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 13px 20px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 0.92rem;
+  color: var(--gold-100);
+  background: linear-gradient(135deg, rgba(20, 60, 42, 0.92), rgba(8, 26, 18, 0.95));
+  border: 1px solid var(--border-gold);
+  box-shadow: var(--glow-gold), var(--shadow-deep);
+  backdrop-filter: blur(14px);
+  white-space: nowrap;
+}
+
+.toast svg { color: var(--gold-300); flex-shrink: 0; }
+
+.error { border-color: rgba(255, 138, 122, 0.45); box-shadow: 0 0 24px rgba(255, 138, 122, 0.2), var(--shadow-deep); }
+.error svg { color: var(--danger); }

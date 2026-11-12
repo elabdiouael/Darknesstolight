@@ -1,0 +1,43 @@
+.wrap { display: inline-flex; align-items: center; gap: 12px; color: var(--gold-300); vertical-align: middle; }
+.pageWrap { display: grid; place-items: center; min-height: 52vh; }
+.wrap.page { flex-direction: column; gap: 18px; }
+
+.scene { position: relative; display: grid; place-items: center; width: 44px; height: 44px; perspective: 300px; }
+.sm .scene { width: 22px; height: 22px; }
+.wrap.page .scene { width: 86px; height: 86px; }
+
+.star {
+  width: 70%;
+  height: 70%;
+  overflow: visible;
+  filter: drop-shadow(0 0 8px rgba(212, 175, 55, 0.75));
+  animation: spin3d 2.4s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+  transform-style: preserve-3d;
+}
+@keyframes spin3d {
+  0% { transform: rotateY(0) rotateZ(0); }
+  50% { transform: rotateY(180deg) rotateZ(45deg); }
+  100% { transform: rotateY(360deg) rotateZ(90deg); }
+}
+
+.orbit { position: absolute; inset: 0; animation: orbit 1.6s linear infinite; }
+.orbit i {
+  position: absolute; top: 50%; left: 50%; width: 5px; height: 5px; margin: -2.5px; border-radius: 50%;
+  background: var(--emerald-300); box-shadow: 0 0 8px var(--emerald-300);
+}
+.orbit i:nth-child(1) { transform: rotate(0deg) translateX(var(--r, 22px)); }
+.orbit i:nth-child(2) { transform: rotate(120deg) translateX(var(--r, 22px)); opacity: 0.7; }
+.orbit i:nth-child(3) { transform: rotate(240deg) translateX(var(--r, 22px)); opacity: 0.45; }
+.sm .orbit { --r: 12px; }
+.sm .orbit i { width: 3px; height: 3px; margin: -1.5px; }
+.wrap.page .orbit { --r: 46px; }
+.wrap.page .orbit i { width: 7px; height: 7px; margin: -3.5px; background: var(--gold-300); box-shadow: 0 0 12px var(--gold-500); }
+@keyframes orbit { to { transform: rotate(360deg); } }
+
+.label { font-size: 0.86rem; font-weight: 700; color: var(--text-muted); letter-spacing: 0.04em; }
+.sm .label { font-size: 0.8rem; }
+.wrap.page .label { font-family: var(--font-display); font-size: 1.2rem; color: var(--gold-100); }
+.label b { animation: dot 1.2s infinite; }
+.label b:nth-child(2) { animation-delay: 0.2s; }
+.label b:nth-child(3) { animation-delay: 0.4s; }
+@keyframes dot { 0%, 100% { opacity: 0.2; } 50% { opacity: 1; } }

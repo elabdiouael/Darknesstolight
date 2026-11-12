@@ -1,0 +1,39 @@
+.wrap {
+  display: flex;
+  padding: 3px;
+  border-radius: 999px;
+  border: 1px solid var(--border-glass);
+  background: rgba(0, 0, 0, 0.28);
+  direction: ltr;
+}
+
+.btn {
+  position: relative;
+  min-width: 36px;
+  height: 32px;
+  padding: 0 10px;
+  border: none;
+  background: none;
+  border-radius: 999px;
+  cursor: pointer;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  transition: color 0.3s;
+}
+.btn:hover { color: var(--gold-100); }
+.on, .on:hover { color: #1b1305; }
+
+@media (max-width: 560px) {
+  .btn { min-width: 30px; height: 30px; padding: 0 7px; }
+}
+
+.pill {
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--gold-100), var(--gold-500));
+}
+
+.label { position: relative; z-index: 1; font-family: var(--font-ui); }
