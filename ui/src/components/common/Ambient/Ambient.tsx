@@ -32,6 +32,8 @@ export const CursorGlow = () => {
 // Variable f module: navigation client-side ma kat3awdch t-charger l-module -> ma kaybanch merra khra.
 let splashShown = false;
 const claimSplash = () => {
+  // L-vidéo promo 3endha l-intro dyalha: bla splash
+  if (typeof window !== "undefined" && window.location.pathname.startsWith("/promo")) { splashShown = true; return false; }
   if (!splashShown) { splashShown = true; return true; }
   return false;
 };

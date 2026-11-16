@@ -41,7 +41,7 @@ export const AdhanPanel = ({ settings, onChange }: { settings: SalatSettings; on
       </header>
 
       <span className={styles.label}>{t("adhan.voice")}</span>
-      <div className={styles.voices}>
+      <div className={`fx-rail2 ${styles.voices}`}>
         {ADHAN_VOICES.map((v) => {
           const on = settings.voice === v.id;
           return (

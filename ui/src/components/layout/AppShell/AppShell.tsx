@@ -12,6 +12,7 @@ import { NourMood } from "@/components/three/NourMood";
 import { LangSwitcher } from "@/components/common/LangSwitcher/LangSwitcher";
 import { useHydrated } from "@/lib/useHydrated";
 import { PageLoader } from "@/components/common/NourLoader/NourLoader";
+import { NextPrayerChip } from "./NextPrayerChip";
 import styles from "./AppShell.module.css";
 
 let meCache: Me | null = null;
@@ -125,6 +126,7 @@ export const AppShell = ({ children, calm = false, star = true }: { children: Re
           </nav>
 
           <div className={styles.right}>
+            <NextPrayerChip />
             {me && (
               <div className={styles.stats}>
                 <span title={t("common.points")}><Sparkles size={14} /> {me.nourPoints}</span>

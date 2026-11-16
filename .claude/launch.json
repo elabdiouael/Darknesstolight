@@ -1,0 +1,17 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "ui",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["--prefix", "ui", "run", "dev"],
+      "port": 3000
+    },
+    {
+      "name": "api",
+      "runtimeExecutable": "cmd",
+      "runtimeArgs": ["/c", "api\\mvnw.cmd", "-f", "api\\pom.xml", "spring-boot:run", "-Dspring-boot.run.jvmArguments=-Djdk.net.unixdomain.tmpdir=C:/__no_such_dir__"],
+      "port": 4333
+    }
+  ]
+}

@@ -209,7 +209,7 @@ export const ProfileDashboard = ({ me, list, hifd, khawatir }: Props) => {
           </div>
         </motion.div>
 
-        <div className={styles.kpis}>
+        <div className={`fx-rail2 ${styles.kpis}`}>
           {kpis.map((k, i) => (
             <motion.div key={k.label} className={`glass-panel fx-card ${styles.kpi}`}
               initial={{ opacity: 0, y: 18 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
@@ -382,7 +382,7 @@ export const ProfileDashboard = ({ me, list, hifd, khawatir }: Props) => {
           <h3>{t("dash.badges")}</h3>
           <small>{t("dash.badges.count", { n: unlocked, t: badges.length })}</small>
         </header>
-        <div className={styles.badges}>
+        <div className={`fx-rail2 ${styles.badges}`}>
           {badges.map((b, i) => {
             const on = b.cur >= b.goal;
             return (

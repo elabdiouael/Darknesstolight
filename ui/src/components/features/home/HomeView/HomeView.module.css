@@ -166,3 +166,9 @@
 .node small { display: none; }
 .nodeNext small, .node:hover small { display: block; }
 .node:hover { z-index: 2; }
+
+/* L-fragh bin l-kalimat (inline-block kay-akol l-espace) + l-3onwan aw9a7 */
+.word { margin-inline-end: 0.26em; }
+.dark { -webkit-text-stroke: 1px rgba(245, 238, 219, 0.5); }
+.disc { box-shadow: none; opacity: 0.85; }
+.core { padding: 14px 18px; border-radius: 50%; background: radial-gradient(circle, rgba(2, 8, 7, 0.82) 0%, rgba(2, 8, 7, 0.55) 55%, transparent 72%); }

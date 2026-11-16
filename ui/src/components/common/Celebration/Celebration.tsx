@@ -61,6 +61,7 @@ export const CelebrationProvider = ({ children }: { children: React.ReactNode })
         g.restore();
       }
       if (parts.current.length) raf.current = requestAnimationFrame(loop.current);
+      else c.style.display = "none"; // canvas plein écran chfaf = tabaqa zayda l l-compositeur f kol frame
     };
   }, []);
 
@@ -113,13 +114,16 @@ export const CelebrationProvider = ({ children }: { children: React.ReactNode })
     } else {
       burst(x, y, 46, 7);
     }
-    if (wasIdle) raf.current = requestAnimationFrame(loop.current);
+    if (wasIdle) {
+      if (canvasRef.current) canvasRef.current.style.display = "";
+      raf.current = requestAnimationFrame(loop.current);
+    }
   }, []);
 
   return (
     <Ctx.Provider value={celebrate}>
       {children}
-      <canvas ref={canvasRef} className={styles.canvas} aria-hidden />
+      <canvas ref={canvasRef} className={styles.canvas} style={{ display: "none" }} aria-hidden />
       <AnimatePresence>
         {overlay && (
           <motion.div className={styles.overlay} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setOverlay(null)}>

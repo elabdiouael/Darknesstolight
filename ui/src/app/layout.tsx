@@ -4,9 +4,10 @@ import { Suspense } from "react";
 import "@fontsource/amiri-quran/400.css";
 import "@fontsource/amiri/400.css";
 import "@fontsource/amiri/700.css";
-import "@fontsource/cormorant-garamond/500.css";
-import "@fontsource/cormorant-garamond/600.css";
-import "@fontsource/cormorant-garamond/700.css";
+// Khatt d l-3anawin w l-ar9am: Rajdhani (HUD / sci-fi) — latin ghir, l-3arbiya b l-khotout dyalha
+import "@fontsource/rajdhani/latin-500.css";
+import "@fontsource/rajdhani/latin-600.css";
+import "@fontsource/rajdhani/latin-700.css";
 import "@fontsource/manrope/400.css";
 import "@fontsource/manrope/500.css";
 import "@fontsource/manrope/600.css";
@@ -24,7 +25,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#030a07",
+  themeColor: "#020807",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

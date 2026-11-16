@@ -102,3 +102,9 @@
   .grid, .hifdGrid { grid-template-columns: 1fr; }
   .hAr { display: none; }
 }
+/* Mobile: les filtres kay-b9aw dakhel l-écran (scroll ofo9i ila kanou twal) */
+@media (max-width: 700px) {
+  .filters { max-width: 100%; overflow-x: auto; scrollbar-width: none; }
+  .filters::-webkit-scrollbar { display: none; }
+  .filters button { flex-shrink: 0; white-space: nowrap; }
+}

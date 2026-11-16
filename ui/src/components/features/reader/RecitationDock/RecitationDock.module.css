@@ -1,7 +1,7 @@
 .dock {
   position: fixed;
   left: 50%;
-  bottom: 18px;
+  bottom: calc(18px + var(--rdock, 0px));
   translate: -50% 0;
   z-index: 180;
   display: flex;
@@ -84,6 +84,6 @@
 
 @media (max-width: 640px) {
   .hideXs { display: none; }
-  .dock { bottom: 10px; gap: 8px; padding: 8px 10px 8px 8px; }
+  .dock { bottom: calc(10px + var(--rdock, 0px)); gap: 8px; padding: 8px 10px 8px 8px; }
   .disc { display: none; }
 }

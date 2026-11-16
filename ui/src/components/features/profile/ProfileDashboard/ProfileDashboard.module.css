@@ -39,7 +39,8 @@
 .kpi svg { color: var(--gold-300); }
 .kpi strong { font-family: var(--font-display); font-size: 1.9rem; line-height: 1; color: var(--gold-100); font-variant-numeric: tabular-nums; }
 .kpi strong small { font-family: var(--font-ui); font-size: 0.7rem; color: var(--text-muted); }
-.kpi span { font-size: 0.72rem; color: var(--text-muted); }
+/* > span: ghir l-libellé (machi r-r9em li dakhel strong, CountUp kay-rendih f span) */
+.kpi > span { font-size: 0.72rem; color: var(--text-muted); }
 
 /* ---- Panels ---- */
 .row2 { display: grid; grid-template-columns: 1.35fr 1fr; gap: 14px; }
@@ -180,3 +181,10 @@
   .hifdFacts { grid-template-columns: repeat(3, 1fr); }
 }
 @media (prefers-reduced-motion: reduce) { .juz_current { animation: none; } }
+
+/* PC: bento — l-KPI l-wla w l-akhira 3radhom mdouble (6 colonnes, jouj stour mkemlin) */
+@media (min-width: 1101px) {
+  .kpis { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+  .kpis > :first-child, .kpis > :last-child { grid-column: span 2; }
+  .kpis > :first-child strong, .kpis > :last-child strong { font-size: 2.5rem; }
+}

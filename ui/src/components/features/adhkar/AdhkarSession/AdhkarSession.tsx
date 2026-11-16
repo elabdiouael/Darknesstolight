@@ -213,9 +213,9 @@ const Session = ({ cat, start }: { cat: AdhkarCategory; start: number | null }) 
           <div className={styles.stage}>
             <AnimatePresence mode="wait" custom={dir} initial={false}>
               <motion.div key={items[idx].id} custom={dir}
-                initial={{ opacity: 0, x: dir * 60, rotateY: dir * -8, filter: "blur(6px)" }}
-                animate={{ opacity: 1, x: 0, rotateY: 0, filter: "blur(0px)" }}
-                exit={{ opacity: 0, x: dir * -60, rotateY: dir * 8, filter: "blur(6px)" }}
+                initial={{ opacity: 0, x: dir * 60, rotateY: dir * -8 }}
+                animate={{ opacity: 1, x: 0, rotateY: 0 }}
+                exit={{ opacity: 0, x: dir * -60, rotateY: dir * 8 }}
                 transition={{ duration: 0.45, ease: EASE }}
                 style={{ transformPerspective: 1600 }}>
                 <DhikrCard cat={cat} d={items[idx]} index={idx} total={n} prefs={prefs}

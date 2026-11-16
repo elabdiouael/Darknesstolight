@@ -162,3 +162,8 @@
   .tabInner { gap: 5px; }
   .tabInner svg, .tabInner small { display: none; }
 }
+
+/* PC: l-carte l-wla dyal kol majmou3a "vedette" (3rida) */
+@media (min-width: 1101px) {
+  .grid > :first-child { grid-column: span 2; }
+}

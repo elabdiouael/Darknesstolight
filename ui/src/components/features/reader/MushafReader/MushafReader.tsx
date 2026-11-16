@@ -59,9 +59,9 @@ const pairOf = (pages: SurahPage[], idx: number): number[] => {
 // Teqlab dyal la page (dir = 1 -> page jaya, -1 -> li fatt). Bla filter blur: kan kay-tiyye7 l-fps f kol teqlab.
 const FLIP_VARIANTS: Record<PageFlip, Variants> = {
   book: {
-    enter: (dir: number) => ({ opacity: 0, rotateY: dir * 62, originX: dir > 0 ? 0 : 1, x: dir * -40 }),
-    center: { opacity: 1, rotateY: 0, x: 0, transition: { duration: 0.8, ease: EASE } },
-    exit: (dir: number) => ({ opacity: 0, rotateY: dir * -62, originX: dir > 0 ? 1 : 0, x: dir * 40, transition: { duration: 0.4, ease: EASE } }),
+    enter: (dir: number) => ({ opacity: 0.25, rotateY: dir * 86, originX: dir > 0 ? 0 : 1, x: 0, scale: 0.985 }),
+    center: { opacity: 1, rotateY: 0, x: 0, scale: 1, transition: { duration: 0.68, ease: EASE, opacity: { duration: 0.25 } } },
+    exit: (dir: number) => ({ opacity: 0.2, rotateY: dir * -86, originX: dir > 0 ? 1 : 0, x: 0, scale: 0.985, transition: { duration: 0.32, ease: [0.55, 0, 0.9, 0.6], opacity: { duration: 0.32, ease: [0.9, 0, 1, 1] } } }),
   },
   slide: {
     enter: (dir: number) => ({ opacity: 0, x: dir * -90 }),
@@ -130,7 +130,13 @@ const SessionChip = ({ pages, onTick }: { pages: number; onTick: (seconds: numbe
     return () => clearInterval(id);
   }, []);
   useEffect(() => { if (sec > 0 && sec % 15 === 0) onTick(15); }, [sec, onTick]);
-  return <span className={styles.session}><Timer size={14} /> {t("reader.session", { time: fmtTime(sec), pages })}</span>;
+  return (
+    <div className={styles.sess} title={t("reader.session", { time: fmtTime(sec), pages })}>
+      <Timer size={15} />
+      <strong>{fmtTime(sec)}</strong>
+      <small>{t("reader.hud.pagesRead", { n: pages })}</small>
+    </div>
+  );
 };
 
 export const MushafReader = ({ khatmaId }: { khatmaId: string }) => {
@@ -588,6 +594,24 @@ export const MushafReader = ({ khatmaId }: { khatmaId: string }) => {
     setGotoPage("");
   };
   const goJuz = (j: number) => { const st = juzStart(j); goSurah(st.surah, st.ayah); setGotoOpen(false); };
+  // ---------- HUD ----------
+  const cpJuz = khatma.completed ? 31 : hasStarted ? juzOf(khatma.currentSurah, khatma.currentAyah) : 0;
+  const scrubPage = scrub ?? currentPageNo;
+  const scrubStart = pageStart(scrubPage);
+  const scrubJuz = juzOf(scrubStart.surah, scrubStart.ayah);
+  const scrubPct = ((scrubPage - 1) / (TOTAL_PAGES - 1)) * 100;
+  const readFrac = (currentPageNo - 1) / (TOTAL_PAGES - 1);
+  const wirdSegs = Math.min(wirdGoal, 24);
+  const wirdLit = wirdGoal > 0 ? Math.round((Math.min(wirdDone, wirdGoal) / wirdGoal) * wirdSegs) : 0;
+  const prevLabel = firstOfSurah ? t("reader.prevSurah") : t("reader.prevPage");
+  const nextLabel = lastOfSurah ? t("reader.nextSurah") : t("reader.nextPage");
+  /** "L-lampe": dow khfif kay-tbe3 souris fo9 l-wr9a (CSS variables, bla re-render) */
+  const onStageMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (e.pointerType !== "mouse") return;
+    const el = e.currentTarget, r = el.getBoundingClientRect();
+    el.style.setProperty("--mx", `${(((e.clientX - r.left) / r.width) * 100).toFixed(1)}%`);
+    el.style.setProperty("--my", `${(((e.clientY - r.top) / r.height) * 100).toFixed(1)}%`);
+  };
 
   /** Text dyal aya: tajweed (b l-alwan) / kelma b kelma (hover) / 3adi */
   const ayahText = (v: Verse) => {
@@ -636,7 +660,7 @@ export const MushafReader = ({ khatmaId }: { khatmaId: string }) => {
         ) : viewMode === "mushaf" ? (
           <p className={`quran-text ${styles.mushaf} ${prefs.wordHover && !tj ? styles.wordMode : ""} ${prefs.ayahLines ? styles.ayahLines : ""} ${prefs.spotlight ? styles.spot : ""} ${prefs.dimRead ? styles.dimRead : ""} ${prefs.ayahNumbers ? "" : styles.noNums}`}
             style={{
-              fontSize: `${spreadOn ? prefs.fontSize * 0.86 : prefs.fontSize}rem`, lineHeight: prefs.lineHeight,
+              fontSize: `calc(${spreadOn ? prefs.fontSize * 0.86 : prefs.fontSize}rem * var(--fs-k, 1))`, lineHeight: prefs.lineHeight,
               textAlign: prefs.align, textAlignLast: "center",
               wordSpacing: prefs.wordSpacing ? `${prefs.wordSpacing}em` : undefined, paddingInline: 6 + prefs.pagePad,
             }}>
@@ -685,7 +709,7 @@ export const MushafReader = ({ khatmaId }: { khatmaId: string }) => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-40px" }}
                 transition={{ duration: 0.5, delay: Math.min(i, 6) * 0.03 }}
-                className={`${styles.card} ${ayahState(v.id)} ${selected?.id === v.id ? styles.isSelected : ""} ${playingAyah === v.id ? styles.isPlaying : ""}`}
+                className={`fx-card ${styles.card} ${ayahState(v.id)} ${selected?.id === v.id ? styles.isSelected : ""} ${playingAyah === v.id ? styles.isPlaying : ""}`}
                 onClick={(e) => pickAyah(v, e)}
               >
                 <div className={styles.cardHead}>
@@ -694,7 +718,7 @@ export const MushafReader = ({ khatmaId }: { khatmaId: string }) => {
                   {favorites.has(surah, v.id) && <i className={styles.favDot} aria-hidden />}
                   {burst === v.id && <Burst />}
                 </div>
-                <p className="quran-text" style={{ fontSize: `${prefs.fontSize * 0.9}rem` }}>{ayahText(v)}</p>
+                <p className="quran-text" style={{ fontSize: `calc(${prefs.fontSize * 0.9}rem * var(--fs-k, 1))` }}>{ayahText(v)}</p>
                 {v.translation && <p className={styles.trans}>{v.translation}</p>}
               </motion.li>
             ))}
@@ -720,72 +744,12 @@ export const MushafReader = ({ khatmaId }: { khatmaId: string }) => {
           initial={{ scale: 0, opacity: 0.9 }} animate={{ scale: 1, opacity: 0 }} transition={{ duration: 0.85, ease: EASE }} aria-hidden />
       ))}
 
-      {/* ===== Barre dyal l-khatma ===== */}
-      <motion.section initial={{ opacity: 0, y: -16 }} animate={{ opacity: 1, y: 0 }} className={`glass-panel ${styles.top}`}>
-        <div className={styles.topRow}>
-          <Link href="/khatma" className={styles.back}><ArrowLeft size={16} /> {t("reader.back")}</Link>
-          <div className={styles.titleBox}>
-            <span className={styles.tplName}>{tpl.glyph} {t(`tpl.${tpl.id}` as DictKey)}</span>
-            <h1 className={styles.title}>{khatma.title}</h1>
-          </div>
-          <div className={styles.topActions}>
-            <div className={styles.members}>
-              {khatma.members.slice(0, 5).map((m) => (
-                <span key={m.id} title={m.username} className={styles.mAvatar}>
-                  {m.username.slice(0, 1).toUpperCase()}
-                  {m.owner && <Crown size={9} className={styles.crown} />}
-                </span>
-              ))}
-            </div>
-            <button className="icon-btn" onClick={() => setActivityOpen((v) => !v)} title={t("reader.activity")}><ActivityIcon size={17} /></button>
-            <button className="btn-gold" onClick={() => setShareOpen(true)}><Share2 size={16} /> <span className={styles.hideSm}>{t("share.title")}</span></button>
-          </div>
-        </div>
-
-        <div className={styles.progress}>
-          <div className={styles.track}>
-            <motion.div className={styles.fill} initial={{ width: 0 }} animate={{ width: `${progress}%` }} transition={{ duration: 1.4, ease: EASE }} />
-            <motion.span className={styles.marker} initial={{ left: 0 }} animate={{ left: `${progress}%` }} transition={{ duration: 1.4, ease: EASE }} />
-          </div>
-          <div className={styles.progressMeta}>
-            <span><Bookmark size={13} /> {surahName(getSurah(khatma.currentSurah))} · {khatma.currentAyah} · {t("common.juz")} {juzOf(khatma.currentSurah, khatma.currentAyah)}</span>
-            <strong>{progress.toFixed(1)}%</strong>
-          </div>
-        </div>
-        {khatma.completed && <div className={styles.completed}>✦ {t("reader.completedBanner")} ✦</div>}
-      </motion.section>
-
-      {/* ===== Toolbar ===== */}
-      <div className={styles.toolbar}>
-        <div className={styles.toolGroup}>
-        <button className="btn-ghost" onClick={() => setDrawer(true)}><List size={16} /> {t("reader.surahs")}</button>
-        <div className={styles.gotoWrap} ref={gotoBox}>
-          <button className={`btn-ghost ${gotoOpen ? styles.toolOn : ""}`} onClick={() => setGotoOpen((v) => !v)} aria-expanded={gotoOpen}>
-            <Compass size={16} /> <span className={styles.hideSm}>{t("reader.goto")}</span>
-          </button>
-          <AnimatePresence>
-            {gotoOpen && (
-              <motion.div className={styles.gotoPanel} role="dialog" aria-label={t("reader.goto")}
-                initial={{ opacity: 0, y: -8, scale: 0.97 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -8, scale: 0.97 }}
-                transition={{ duration: 0.22, ease: EASE }}>
-                <form className={styles.gotoForm} onSubmit={(e) => { e.preventDefault(); goPage(Number(gotoPage)); }}>
-                  <label htmlFor="goto-page">{t("reader.goto.page")}</label>
-                  <div>
-                    <input id="goto-page" autoFocus type="number" inputMode="numeric" min={1} max={TOTAL_PAGES} value={gotoPage}
-                      placeholder={String(currentPageNo)} onChange={(e) => setGotoPage(e.target.value)} />
-                    <button className="btn-gold" type="submit" disabled={!gotoPage}>{t("reader.goto.go")}</button>
-                  </div>
-                </form>
-                <span className={styles.gotoLabel}>{t("reader.goto.juz")}</span>
-                <div className={styles.juzGrid}>
-                  {Array.from({ length: 30 }, (_, i) => (
-                    <button key={i} className={currentJuz === i + 1 ? styles.juzOn : ""} onClick={() => goJuz(i + 1)}>{i + 1}</button>
-                  ))}
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
+      {/* ===== Bandeau dyal l-khatma (rqi9) ===== */}
+      <motion.header initial={{ opacity: 0, y: -16 }} animate={{ opacity: 1, y: 0 }} className={`glass-panel ${styles.top}`}>
+        <Link href="/khatma" className={styles.back} aria-label={t("reader.back")}><ArrowLeft size={17} /> <span className={styles.hideSm}>{t("reader.back")}</span></Link>
+        <div className={styles.titleBox}>
+          <span className={styles.tplName}>{tpl.glyph} {t(`tpl.${tpl.id}` as DictKey)}</span>
+          <h1 className={styles.title}>{khatma.title}</h1>
         </div>
         {lang !== "ar" && (
           <div className={styles.segment}>
@@ -797,114 +761,224 @@ export const MushafReader = ({ khatmaId }: { khatmaId: string }) => {
             ))}
           </div>
         )}
-        <div className={styles.toolGroup}>
-          <SessionChip pages={sessionPages} onTick={logSeconds} />
-          <span className={`${styles.session} ${wirdDone >= wirdGoal ? styles.wirdDone : ""}`} title={t("reader.wird")}>
-            <Target size={14} /> {t("reader.wird.pages", { done: Math.min(wirdDone, wirdGoal), goal: wirdGoal })}
-            <i className={styles.wirdBar}><b style={{ transform: `scaleX(${Math.min(1, wirdDone / wirdGoal)})` }} /></i>
-          </span>
-          {resume && pageOf(resume.surah, resume.ayah) !== pageOf(khatma.currentSurah, khatma.currentAyah) && (
-            <button className="btn-ghost" onClick={() => { goSurah(resume.surah, resume.ayah); setResume(null); }}>
-              <History size={16} /> {t("reader.resume", { n: pageOf(resume.surah, resume.ayah) })}
+        <div className={styles.topActions}>
+          <div className={styles.members}>
+            {khatma.members.slice(0, 5).map((m) => (
+              <span key={m.id} title={m.username} className={styles.mAvatar}>
+                {m.username.slice(0, 1).toUpperCase()}
+                {m.owner && <Crown size={9} className={styles.crown} />}
+              </span>
+            ))}
+          </div>
+          <button className="icon-btn" onClick={() => setActivityOpen((v) => !v)} title={t("reader.activity")} aria-label={t("reader.activity")}><ActivityIcon size={17} /></button>
+          <button className="btn-gold" onClick={() => setShareOpen(true)}><Share2 size={16} /> <span className={styles.hideSm}>{t("share.title")}</span></button>
+        </div>
+        <span className={styles.topFill} style={{ transform: `scaleX(${progress / 100})` }} aria-hidden />
+      </motion.header>
+
+      <div className={styles.deck}>
+        {/* ===== Rail dyal l-outils (PC: 3la jenb · mobile: dock l-ta7t) ===== */}
+        <aside className={styles.rail} aria-label={t("settings.title")}>
+          <button className={styles.rb} onClick={() => setDrawer(true)} aria-label={t("reader.surahs")}><List size={19} /><span>{t("reader.surahs")}</span></button>
+          <div className={styles.gotoWrap} ref={gotoBox}>
+            <button className={`${styles.rb} ${gotoOpen ? styles.rbOn : ""}`} onClick={() => setGotoOpen((v) => !v)} aria-expanded={gotoOpen} aria-label={t("reader.goto")}>
+              <Compass size={19} /><span>{t("reader.goto")}</span>
             </button>
-          )}
-          <ReaderSettings prefs={prefs} onChange={setPrefs} onReset={resetPrefs} canSpread={wide} />
-          <button className={`icon-btn ${autoScroll ? styles.toolOn : ""}`} onClick={() => setAutoScroll((v) => !v)}
-            title={t("reader.autoScroll")} aria-label={t("reader.autoScroll")} aria-pressed={autoScroll}>
-            <ChevronsDown size={17} className={autoScroll ? styles.scrolling : ""} />
+            <AnimatePresence>
+              {gotoOpen && (
+                <motion.div className={`${styles.gotoPanel} ${styles.railPop}`} role="dialog" aria-label={t("reader.goto")}
+                  initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.96 }}
+                  transition={{ duration: 0.22, ease: EASE }}>
+                  <form className={styles.gotoForm} onSubmit={(e) => { e.preventDefault(); goPage(Number(gotoPage)); }}>
+                    <label htmlFor="goto-page">{t("reader.goto.page")}</label>
+                    <div>
+                      <input id="goto-page" autoFocus type="number" inputMode="numeric" min={1} max={TOTAL_PAGES} value={gotoPage}
+                        placeholder={String(currentPageNo)} onChange={(e) => setGotoPage(e.target.value)} />
+                      <button className="btn-gold" type="submit" disabled={!gotoPage}>{t("reader.goto.go")}</button>
+                    </div>
+                  </form>
+                  <span className={styles.gotoLabel}>{t("reader.goto.juz")}</span>
+                  <div className={styles.juzGrid}>
+                    {Array.from({ length: 30 }, (_, i) => (
+                      <button key={i} className={currentJuz === i + 1 ? styles.juzOn : ""} onClick={() => goJuz(i + 1)}>{i + 1}</button>
+                    ))}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+          <i className={styles.railSep} aria-hidden />
+          <button className={styles.rb} aria-label={t("audio.play")}
+            onClick={() => startRecitation(khatma.currentSurah === surah && hasStarted ? khatma.currentAyah : (page?.from ?? 1))}>
+            <Headphones size={19} /><span>{t("audio.play")}</span>
           </button>
-          <button className="btn-ghost" onClick={() => startRecitation(khatma.currentSurah === surah && hasStarted ? khatma.currentAyah : (page?.from ?? 1))}>
-            <Headphones size={16} /> <span className={styles.hideSm}>{t("audio.play")}</span>
-          </button>
-          <button className="btn-ghost" disabled={!firstShownPage} onClick={() => firstShownPage && setTasmia({
+          <button className={styles.rb} disabled={!firstShownPage} aria-label={t("reader.tasmiaPage")} onClick={() => firstShownPage && setTasmia({
             items: Array.from({ length: lastShownPage.to - firstShownPage.from + 1 }, (_, i) => ({ surah, ayah: firstShownPage.from + i })),
             title: `${t("tasmia.title")} · ${t("reader.page")} ${firstShownPage.page}${shown.length > 1 ? `–${lastShownPage.page}` : ""}`,
           })}>
-            <Mic size={16} /> <span className={styles.hideSm}>{t("reader.tasmiaPage")}</span>
+            <Mic size={19} /><span>{t("reader.tasmiaPage")}</span>
           </button>
-          <button className="btn-ghost" onClick={() => goSurah(khatma.currentSurah, khatma.currentAyah)}>
-            <Bookmark size={16} /> <span className={styles.hideSm}>{t("reader.goCheckpoint")}</span>
+          <button className={`${styles.rb} ${styles.rbGold}`} aria-label={t("reader.goCheckpoint")} onClick={() => goSurah(khatma.currentSurah, khatma.currentAyah)}>
+            <Bookmark size={19} /><span>{t("reader.goCheckpoint")}</span>
           </button>
-          <button className="icon-btn" onClick={() => setFocus((v) => !v)} title={t("reader.focus")} aria-label={t("reader.focus")} aria-pressed={focus}>
-            {focus ? <Minimize2 size={16} /> : <Maximize2 size={16} />}
+          <i className={styles.railSep} aria-hidden />
+          <ReaderSettings prefs={prefs} onChange={setPrefs} onReset={resetPrefs} canSpread={wide}
+            rail={{ wrap: styles.railItem, trigger: styles.rb, active: styles.rbOn, panel: styles.railPop }} />
+          <button className={`${styles.rb} ${autoScroll ? styles.rbOn : ""}`} onClick={() => setAutoScroll((v) => !v)} aria-label={t("reader.autoScroll")} aria-pressed={autoScroll}>
+            <ChevronsDown size={19} className={autoScroll ? styles.scrolling : ""} /><span>{t("reader.autoScroll")}</span>
           </button>
-        </div>
-      </div>
+          <button className={`${styles.rb} ${styles.rbFocus}`} onClick={() => setFocus((v) => !v)} aria-label={t("reader.focus")} aria-pressed={focus}>
+            {focus ? <Minimize2 size={18} /> : <Maximize2 size={18} />}<span>{t("reader.focus")}</span>
+          </button>
+        </aside>
 
-      {prefs.hide !== "off" && <p className={styles.hideHint}><EyeOff size={15} /> {t("reader.hideHint")}</p>}
+        {/* ===== L-ktab ===== */}
+        <div className={styles.center}>
+          {prefs.hide !== "off" && <p className={styles.hideHint}><EyeOff size={15} /> {t("reader.hideHint")}</p>}
 
-      {/* ===== Page(s) dyal l-Mushaf ===== */}
-      <div className={styles.stage} data-theme={prefs.autoNight && night ? "night" : prefs.theme} style={{
-        opacity: prefs.brightness, ["--font-quran" as string]: MUSHAF_FONTS[prefs.font],
-        maxWidth: prefs.narrow && !spreadOn ? 820 : undefined, width: "100%", marginInline: "auto",
-      }}>
-        {prefs.tapZones && (
-          <>
-            <button className={`${styles.tap} ${styles.tapL}`} onClick={() => turnPage(lang === "ar" ? 1 : -1)} aria-label={lang === "ar" ? t("reader.tapNext") : t("reader.tapPrev")} />
-            <button className={`${styles.tap} ${styles.tapR}`} onClick={() => turnPage(lang === "ar" ? -1 : 1)} aria-label={lang === "ar" ? t("reader.tapPrev") : t("reader.tapNext")} />
-          </>
-        )}
-        <AnimatePresence mode="wait" custom={dir}>
-          <motion.article
-            key={`${surah}-${shown.join("-")}-${viewMode}-${lang}`}
-            className={`${styles.page} ${spreadOn && shown.length === 2 ? styles.spread : ""}`}
-            custom={dir}
-            variants={FLIP_VARIANTS[prefs.flip]}
-            initial="enter"
-            animate="center"
-            exit="exit"
-            onPanEnd={onPanEnd}
-            style={{ transformPerspective: 2200, touchAction: "pan-y" }}
-          >
-            <span className={styles.curlShade} aria-hidden />
-            {/* L-page l-impaire 3la l-limn (b7al l-ktab l-3arabi) */}
-            {shown.length === 2 ? (
-              <div className={styles.book}>
-                {renderLeaf(shown[0], "right")}
-                <span className={styles.spine} aria-hidden />
-                {renderLeaf(shown[1], "left")}
+          <div className={styles.stage} data-theme={prefs.autoNight && night ? "night" : prefs.theme} onPointerMove={onStageMove} style={{
+            opacity: prefs.brightness, ["--font-quran" as string]: MUSHAF_FONTS[prefs.font],
+            maxWidth: prefs.narrow && !spreadOn ? 880 : undefined, width: "100%", marginInline: "auto",
+          }}>
+            <span className={styles.aura} aria-hidden />
+            <span className={styles.cover} aria-hidden />
+            {/* S-smaka dyal l-ktab: limn = li t9ra, lisr = li ba9i (kay-tbeddlou m3a t-ta9addoum f l-mushaf kaml) */}
+            <span className={`${styles.stack} ${styles.stackR}`} style={{ ["--k" as string]: readFrac }} aria-hidden />
+            <span className={`${styles.stack} ${styles.stackL}`} style={{ ["--k" as string]: 1 - readFrac }} aria-hidden />
+            {prefs.tapZones && (
+              <>
+                <button className={`${styles.tap} ${styles.tapL}`} onClick={() => turnPage(lang === "ar" ? 1 : -1)} aria-label={lang === "ar" ? t("reader.tapNext") : t("reader.tapPrev")} />
+                <button className={`${styles.tap} ${styles.tapR}`} onClick={() => turnPage(lang === "ar" ? -1 : 1)} aria-label={lang === "ar" ? t("reader.tapPrev") : t("reader.tapNext")} />
+              </>
+            )}
+            <AnimatePresence mode="wait" custom={dir}>
+              <motion.article
+                key={`${surah}-${shown.join("-")}-${viewMode}-${lang}`}
+                className={`${styles.page} ${spreadOn && shown.length === 2 ? styles.spread : ""}`}
+                custom={dir}
+                variants={FLIP_VARIANTS[prefs.flip]}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                onPanEnd={onPanEnd}
+                style={{ transformPerspective: 2200, touchAction: "pan-y" }}
+              >
+                <span className={styles.curlShade} aria-hidden />
+                {/* L-page l-impaire 3la l-limn (b7al l-ktab l-3arabi) */}
+                {shown.length === 2 ? (
+                  <div className={styles.book}>
+                    {renderLeaf(shown[0], "right")}
+                    <span className={styles.spine} aria-hidden />
+                    {renderLeaf(shown[1], "left")}
+                  </div>
+                ) : renderLeaf(shown[0], "single")}
+              </motion.article>
+            </AnimatePresence>
+            <span className={styles.lamp} aria-hidden />
+          </div>
+
+          {/* ===== Teqlab + ruban dyal l-mushaf kaml (30 juz, 604 page) ===== */}
+          <nav className={styles.pager}>
+            <button className={styles.turn} disabled={atStart} onClick={() => turnPage(-1)} aria-label={prevLabel}>
+              <ChevronLeft size={22} className={styles.flip} /><small>{prevLabel}</small>
+            </button>
+            <div className={styles.band}>
+              <div className={styles.bandHead}>
+                <span className={styles.pagerNum}>{t("reader.pageOf", { i: shown.map((s) => s + 1).join("–"), n: pages.length })}</span>
+                {pages.length > 1 && pages.length <= 60 && (
+                  <div className={styles.dots}>
+                    {pages.map((p, i) => (
+                      <button key={p.page} aria-label={`${t("reader.page")} ${p.page}`}
+                        className={`${styles.dot} ${shown.includes(i) ? styles.dotOn : ""} ${i < Math.min(...shown) ? styles.dotPast : ""}`}
+                        onClick={() => { setDir(i > safeIdx ? 1 : -1); setPageIdx(i); setSelected(null); }} />
+                    ))}
+                  </div>
+                )}
+                <span className={styles.scrubLabel}>{t("reader.scrub", { p: scrubPage, j: scrubJuz })}</span>
               </div>
-            ) : renderLeaf(shown[0], "single")}
-          </motion.article>
-        </AnimatePresence>
-      </div>
+              <div className={styles.juzBar} dir="ltr">
+                {JUZ_PAGES.map((pg, i) => (
+                  <i key={i} style={{ flexGrow: (JUZ_PAGES[i + 1] ?? TOTAL_PAGES + 1) - pg }}
+                    className={`${i + 1 < scrubJuz ? styles.jbPast : ""} ${i + 1 === scrubJuz ? styles.jbHere : ""} ${i + 1 === cpJuz ? styles.jbCp : ""}`}><b>{i + 1}</b></i>
+                ))}
+                <input type="range" min={1} max={TOTAL_PAGES} step={1} value={scrubPage} aria-label={t("reader.goto.page")}
+                  onChange={(e) => setScrub(Number(e.target.value))}
+                  onPointerUp={() => { if (scrub != null) { goPage(scrub); setScrub(null); } }}
+                  onKeyUp={() => { if (scrub != null) { goPage(scrub); setScrub(null); } }}
+                  onBlur={() => setScrub(null)} />
+                <span className={`${styles.thumb} ${scrub != null ? styles.thumbOn : ""}`} style={{ left: `${scrubPct}%` }} aria-hidden />
+                {scrub != null && (
+                  <em className={styles.bubble} style={{ ["--p" as string]: `${scrubPct}%` }}>
+                    {t("reader.page")} {scrubPage} · {surahName(getSurah(scrubStart.surah))}
+                  </em>
+                )}
+              </div>
+            </div>
+            <button className={styles.turn} disabled={atEnd} onClick={() => turnPage(1)} aria-label={nextLabel}>
+              <ChevronRight size={22} className={styles.flip} /><small>{nextLabel}</small>
+            </button>
+          </nav>
+        </div>
 
-      {/* ===== Navigation pages ===== */}
-      <nav className={styles.pager}>
-        <button className="btn-ghost" disabled={atStart} onClick={() => turnPage(-1)}>
-          <ChevronLeft size={16} className={styles.flip} /> {firstOfSurah ? t("reader.prevSurah") : t("reader.prevPage")}
-        </button>
-        <div className={styles.pagerMid}>
-          <span className={styles.pagerNum}>
-            {t("reader.pageOf", { i: shown.map((s) => s + 1).join("–"), n: pages.length })}
-          </span>
-          {pages.length > 1 && pages.length <= 60 && (
-            <div className={styles.dots}>
-              {pages.map((p, i) => (
-                <button key={p.page} aria-label={`${t("reader.page")} ${p.page}`}
-                  className={`${styles.dot} ${shown.includes(i) ? styles.dotOn : ""} ${i < Math.min(...shown) ? styles.dotPast : ""}`}
-                  onClick={() => { setDir(i > safeIdx ? 1 : -1); setPageIdx(i); setSelected(null); }} />
+        {/* ===== HUD: t-ta9addoum, fin nta, l-wird, kharita dyal l-ajza2 ===== */}
+        <aside className={styles.lens} aria-label={t("reader.hud.progress")}>
+          <section className={`glass-panel fx-card ${styles.hCard} ${styles.hRing}`}>
+            <div className={styles.ring}>
+              <svg viewBox="0 0 120 120" aria-hidden>
+                <defs>
+                  <linearGradient id="rdRing" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0" stopColor="#5fd3a0" /><stop offset="0.55" stopColor="#d4af37" /><stop offset="1" stopColor="#fff4d6" />
+                  </linearGradient>
+                </defs>
+                <circle cx="60" cy="60" r="52" className={styles.ringBg} />
+                <circle cx="60" cy="60" r="52" className={styles.ringFg} pathLength={100} style={{ strokeDashoffset: 100 - progress }} />
+                <g className={styles.ringDot} style={{ rotate: `${progress * 3.6}deg` }}><circle cx="112" cy="60" r="4.5" /></g>
+              </svg>
+              <div className={`fx-pop ${styles.ringMid}`}><strong>{progress.toFixed(1)}<i>%</i></strong><small>{t("reader.hud.progress")}</small></div>
+            </div>
+            <div className={styles.hMeta}>
+              <span className={styles.hLabel}><Bookmark size={12} /> {t("card.at")}</span>
+              <strong>{surahName(getSurah(khatma.currentSurah))} · {khatma.currentAyah}</strong>
+              <small>{t("common.juz")} {juzOf(khatma.currentSurah, khatma.currentAyah)}</small>
+            </div>
+            {khatma.completed && <div className={styles.completed}>✦ {t("reader.completedBanner")} ✦</div>}
+          </section>
+
+          <section className={`glass-panel fx-card ${styles.hCard} ${styles.hNow}`}>
+            <span className={styles.hLabel}><Compass size={12} /> {t("reader.hud.now")}</span>
+            <div className={styles.nowRow}>
+              <strong className={`fx-pop ${styles.nowNum}`}>{currentPageNo}<i>/{TOTAL_PAGES}</i></strong>
+              <span className={`quran-text ${styles.nowAr}`}>{meta.ar}</span>
+            </div>
+            <i className={styles.nowBar}><b style={{ transform: `scaleX(${currentPageNo / TOTAL_PAGES})` }} /></i>
+            <small>{t("common.juz")} {currentJuz} · {t("reader.hud.left", { n: TOTAL_PAGES - currentPageNo })}</small>
+          </section>
+
+          <section className={`glass-panel fx-card ${styles.hCard} ${styles.hWird} ${wirdDone >= wirdGoal ? styles.hDone : ""}`}>
+            <span className={styles.hLabel}><Target size={12} /> {t("reader.wird")}</span>
+            <strong className={`fx-pop ${styles.nowNum}`}>{Math.min(wirdDone, wirdGoal)}<i>/{wirdGoal}</i></strong>
+            <div className={styles.wirdSegs}>
+              {Array.from({ length: wirdSegs }, (_, i) => <i key={i} className={i < wirdLit ? styles.wOn : ""} />)}
+            </div>
+            <SessionChip pages={sessionPages} onTick={logSeconds} />
+          </section>
+
+          <section className={`glass-panel fx-card ${styles.hCard} ${styles.hMap}`} data-fx-flat>
+            <span className={styles.hLabel}>{t("reader.hud.map")}</span>
+            <div className={styles.jMap}>
+              {Array.from({ length: 30 }, (_, i) => (
+                <button key={i} aria-label={`${t("common.juz")} ${i + 1}`} onClick={() => goJuz(i + 1)}
+                  className={`${i + 1 < cpJuz ? styles.jRead : ""} ${i + 1 === cpJuz ? styles.jCp : ""} ${currentJuz === i + 1 ? styles.jHere : ""}`}>{i + 1}</button>
               ))}
             </div>
-          )}
-        </div>
-        <button className="btn-ghost" disabled={atEnd} onClick={() => turnPage(1)}>
-          {lastOfSurah ? t("reader.nextSurah") : t("reader.nextPage")} <ChevronRight size={16} className={styles.flip} />
-        </button>
-      </nav>
+          </section>
 
-      {/* ===== Scrubber: l-mushaf kaml (604 page) b 3alamat dyal l-ajza2 ===== */}
-      <div className={styles.scrub}>
-        <span className={styles.scrubLabel}>{t("reader.scrub", { p: scrub ?? currentPageNo, j: juzOf(pageStart(scrub ?? currentPageNo).surah, pageStart(scrub ?? currentPageNo).ayah) })}</span>
-        <div className={styles.scrubTrack} dir="ltr">
-          {JUZ_PAGES.map((pg, i) => <i key={i} style={{ left: `${((pg - 1) / (TOTAL_PAGES - 1)) * 100}%` }} title={`${t("common.juz")} ${i + 1}`} />)}
-          <input type="range" min={1} max={TOTAL_PAGES} step={1} value={scrub ?? currentPageNo} aria-label={t("reader.goto.page")}
-            style={{ ["--p" as string]: `${(((scrub ?? currentPageNo) - 1) / (TOTAL_PAGES - 1)) * 100}%` }}
-            onChange={(e) => setScrub(Number(e.target.value))}
-            onPointerUp={() => { if (scrub != null) { goPage(scrub); setScrub(null); } }}
-            onKeyUp={() => { if (scrub != null) { goPage(scrub); setScrub(null); } }}
-            onBlur={() => setScrub(null)} />
-        </div>
+          {resume && pageOf(resume.surah, resume.ayah) !== pageOf(khatma.currentSurah, khatma.currentAyah) && (
+            <button className={`btn-ghost ${styles.resume}`} onClick={() => { goSurah(resume.surah, resume.ayah); setResume(null); }}>
+              <History size={16} /> {t("reader.resume", { n: pageOf(resume.surah, resume.ayah) })}
+            </button>
+          )}
+        </aside>
       </div>
 
       {/* Mode focus: bouton sghir bach nkhrjo */}

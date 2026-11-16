@@ -28,9 +28,9 @@ export const ToastProvider = ({ children }: { children: React.ReactNode }) => {
             <motion.div
               key={i.id}
               layout
-              initial={{ opacity: 0, y: 24, scale: 0.92, filter: "blur(6px)" }}
-              animate={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}
-              exit={{ opacity: 0, y: -12, scale: 0.96, filter: "blur(4px)" }}
+              initial={{ opacity: 0, y: 24, scale: 0.92 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -12, scale: 0.96 }}
               transition={{ type: "spring", stiffness: 380, damping: 30 }}
               className={`${styles.toast} ${i.kind === "error" ? styles.error : ""}`}
             >

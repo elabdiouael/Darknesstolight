@@ -19,8 +19,8 @@ import styles from "./HifdView.module.css";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 const fadeUp = {
-  hidden: { opacity: 0, y: 26, filter: "blur(8px)" },
-  show: (i: number) => ({ opacity: 1, y: 0, filter: "blur(0px)", transition: { delay: i * 0.08, duration: 0.8, ease: EASE } }),
+  hidden: { opacity: 0, y: 26 },
+  show: (i: number) => ({ opacity: 1, y: 0, transition: { delay: i * 0.08, duration: 0.8, ease: EASE } }),
 };
 
 const GROUP_TONE: Record<ReviewGroup, string> = { WEAK: "#ff9d8f", DUE: "#ecd08a", SABQI: "#5fd3a0", MANZIL: "#9fc3ff" };
@@ -180,7 +180,7 @@ export const HifdView = () => {
             <p>{today.memorized ? t("hifd.queue.empty") : t("hifd.empty.text")}</p>
           </motion.div>
         ) : (
-          <div className={styles.groups}>
+          <div className={`fx-rail ${styles.groups}`}>
             {groups.map((g, gi) => {
               const list = items.filter((i) => i.group === g);
               return (

@@ -232,8 +232,9 @@
 .dock { display: none; }
 
 @media (max-width: 760px) {
-  .hasDock .nav { display: none; }
-  .hasDock .right { margin-inline-start: auto; }
+  /* F tilifoun l-nav dyal l-fo9 dima mkhbi (7tta f les pages bla dock, b7al l-mushaf): kan kay-khrej mn l-écran w kay-sgher l-page kamla */
+  .nav { display: none; }
+  .right { margin-inline-start: auto; }
   .withDock { padding-bottom: 130px; }
   .dock {
     position: fixed;
@@ -327,3 +328,39 @@
 .link:not(.active) span:not(.pill):not(.hoverPill) { display: none; }
 .link:not(.active) { padding: 10px 12px; }
 @media (min-width: 900px) { .active span:not(.pill):not(.hoverPill) { display: inline !important; } .active { padding: 9px 16px !important; } }
+
+/* ================= Navbar HUD (sci-fi) ================= */
+.bar {
+  border-color: rgba(130, 235, 215, 0.2);
+  background: linear-gradient(120deg, rgba(7, 32, 28, 0.78), rgba(2, 11, 10, 0.84));
+  box-shadow: 0 18px 50px -24px rgba(0, 0, 0, 0.9), inset 0 1px 0 rgba(170, 255, 238, 0.1), 0 0 40px -18px rgba(90, 225, 200, 0.5);
+}
+.barBorder i { background: conic-gradient(transparent 0 58%, rgba(111, 232, 255, 0.85) 66%, rgba(255, 236, 180, 0.95) 74%, rgba(212, 175, 55, 0.4) 82%, transparent 92%); }
+.barProgress { background: linear-gradient(90deg, var(--cyan), var(--gold-300), var(--gold-100)); box-shadow: 0 0 12px rgba(111, 232, 255, 0.7); }
+.brandText strong { font-family: var(--font-display); text-transform: uppercase; letter-spacing: 0.16em; font-size: 0.98rem; font-weight: 700; }
+.link { font-family: var(--font-display); font-size: 1.02rem; letter-spacing: 0.05em; }
+:global(html[dir="rtl"]) .link { font-family: var(--font-ar-ui); font-size: 0.9rem; letter-spacing: 0; }
+.hoverPill { background: rgba(111, 232, 255, 0.09); box-shadow: inset 0 0 0 1px rgba(130, 235, 215, 0.3); }
+.stats { border-color: rgba(130, 235, 215, 0.2); }
+.stats span { font-family: var(--font-display); font-size: 1rem; letter-spacing: 0.04em; font-variant-numeric: tabular-nums; }
+
+/* Chip dyal s-salat l-jaya */
+.hud {
+  display: inline-flex; align-items: center; gap: 8px; padding: 7px 12px; border-radius: 999px; white-space: nowrap;
+  font-family: var(--font-display); font-size: 0.98rem; letter-spacing: 0.06em; color: var(--ivory);
+  background: rgba(90, 225, 200, 0.06); border: 1px solid rgba(130, 235, 215, 0.28);
+  transition: border-color 0.3s, box-shadow 0.3s, background 0.3s, scale 0.18s var(--ease-lux);
+}
+:global(html[dir="rtl"]) .hud { font-family: var(--font-ar-ui); font-size: 0.82rem; letter-spacing: 0; }
+.hud:hover { border-color: rgba(150, 245, 230, 0.75); background: rgba(90, 225, 200, 0.13); box-shadow: 0 0 22px -6px rgba(111, 232, 255, 0.7); }
+.hud:active { scale: 0.96; }
+.hud i { width: 7px; height: 7px; border-radius: 50%; background: var(--cyan); box-shadow: 0 0 10px var(--cyan); }
+.hud strong { font-weight: 700; color: var(--gold-100); text-transform: uppercase; }
+.hud span { color: var(--aqua); font-variant-numeric: tabular-nums; direction: ltr; }
+@media (max-width: 1180px) { .hud strong { display: none; } }
+@media (max-width: 640px) { .hud { display: none; } }
+
+/* Ida2a zer9a f navbar */
+.bar { border-color: rgba(110, 180, 255, 0.28); box-shadow: 0 18px 50px -24px rgba(0, 0, 0, 0.9), inset 0 1px 0 rgba(160, 210, 255, 0.13), 0 0 44px -16px rgba(60, 140, 255, 0.7); }
+.hud { background: rgba(70, 140, 255, 0.09); border-color: rgba(110, 180, 255, 0.4); }
+.hud span { color: var(--cyan); }

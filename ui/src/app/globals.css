@@ -1,9 +1,15 @@
 /* ============ From Darknesses to Light — Design system "Nour" ============ */
 :root {
   /* Fonds: vert nuit profond */
-  --bg-0: #030a07;
-  --bg-1: #06140e;
-  --bg-2: #0a2018;
+  --bg-0: #020807;
+  --bg-1: #05120f;
+  --bg-2: #0a1f1a;
+
+  /* Ta9a dyal l-3alam: cyan / banafsaji (l-dhab kay-b9a howa n-nour) */
+  --cyan: #6fc8ff;
+  --blue: #4f9dff;
+  --aqua: #6fe8d8;
+  --violet: #a78bfa;
 
   /* Vert dyal din — émeraude */
   --emerald-900: #072a1d;
@@ -25,18 +31,18 @@
 
   --glass: rgba(9, 30, 22, 0.55);
   --glass-strong: rgba(7, 24, 18, 0.82);
-  --border-glass: rgba(236, 208, 138, 0.14);
+  --border-glass: rgba(110, 180, 255, 0.2);
   --border-gold: rgba(236, 208, 138, 0.38);
 
   --glow-gold: 0 0 24px rgba(212, 175, 55, 0.35), 0 0 64px rgba(212, 175, 55, 0.12);
   --shadow-deep: 0 24px 60px -20px rgba(0, 0, 0, 0.75);
 
-  --radius-lg: 22px;
-  --radius-md: 14px;
-  --radius-sm: 10px;
+  --radius-lg: 18px;
+  --radius-md: 13px;
+  --radius-sm: 9px;
 
   --font-ui: "Manrope", "Segoe UI", system-ui, sans-serif;
-  --font-display: "Cormorant Garamond", "Times New Roman", serif;
+  --font-display: "Rajdhani", "Manrope", "Segoe UI", sans-serif;
   --font-quran: "Amiri Quran", "Amiri", "Scheherazade New", serif;
   --font-ar-ui: "Noto Kufi Arabic", "Manrope", sans-serif;
 
@@ -313,6 +319,157 @@ body.ltd-focus [data-shell-header] { opacity: 0; transform: translateY(-120%); p
 .fx-card:hover .fx-icon { transform: translateY(-2px) scale(1.14) rotate(-6deg); filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.7)); }
 
 
+/* =====================================================================================
+   "3ALAM AKHOR" — design system sci-fi, mnesse9 f ga3 les pages
+   L-fikra: d-dhab = n-nour, l-cyan / zmorrodi = t-ta9a dyal l-3alam. Les panels b7al HUD:
+   7dada rqi9a m-dwiya, 3alamat f z-zwaya, khatt "tech" l l-3anawin w l-ar9am.
+   Kolchi hna static (bla animation dayma) bach l-fps yb9a tale3.
+   ===================================================================================== */
+body { background: var(--bg-0); }
+h1, h2, h3 { letter-spacing: 0.012em; }
+:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
+::selection { background: rgba(111, 232, 255, 0.28); color: #fff; }
+* { scrollbar-color: rgba(111, 232, 255, 0.35) transparent; }
+*::-webkit-scrollbar-thumb { background: linear-gradient(180deg, rgba(236, 208, 138, 0.55), rgba(111, 232, 255, 0.45)); }
+input, textarea { caret-color: var(--gold-300); }
+
+/* ---- Panels HUD: 3alamat f z-zwaya (b backgrounds, bla pseudo-elements) ---- */
+.glass-panel {
+  --tk: rgba(236, 208, 138, 0.5);
+  background:
+    linear-gradient(var(--tk), var(--tk)) 8px 8px / 10px 1px no-repeat,
+    linear-gradient(var(--tk), var(--tk)) 8px 8px / 1px 10px no-repeat,
+    linear-gradient(var(--tk), var(--tk)) calc(100% - 8px) 8px / 10px 1px no-repeat,
+    linear-gradient(var(--tk), var(--tk)) calc(100% - 8px) 8px / 1px 10px no-repeat,
+    linear-gradient(var(--tk), var(--tk)) 8px calc(100% - 8px) / 10px 1px no-repeat,
+    linear-gradient(var(--tk), var(--tk)) 8px calc(100% - 8px) / 1px 10px no-repeat,
+    linear-gradient(var(--tk), var(--tk)) calc(100% - 8px) calc(100% - 8px) / 10px 1px no-repeat,
+    linear-gradient(var(--tk), var(--tk)) calc(100% - 8px) calc(100% - 8px) / 1px 10px no-repeat,
+    linear-gradient(165deg, rgba(8, 28, 38, 0.93), rgba(2, 9, 14, 0.96));
+  border: 1px solid var(--border-glass);
+  box-shadow: var(--shadow-deep), inset 0 1px 0 rgba(160, 210, 255, 0.11), inset 0 0 46px rgba(60, 130, 255, 0.06), 0 0 34px -18px rgba(70, 140, 255, 0.55);
+}
+
+/* ---- Cartes: f hover l-7dada kat-che3el cyan + dhab ---- */
+@media (hover: hover) {
+  .fx-card:hover {
+    border-color: rgba(120, 190, 255, 0.7);
+    box-shadow: 0 0 0 1px rgba(236, 208, 138, 0.18), 0 24px 60px -24px rgba(60, 140, 255, 0.75), var(--shadow-deep), inset 0 1px 0 rgba(170, 255, 238, 0.14);
+  }
+}
+.fx-card::after { background: radial-gradient(260px circle at var(--px, 50%) var(--py, 50%), rgba(120, 190, 255, 0.14), transparent 70%); }
+
+/* ---- Boutons ---- */
+.btn-gold, .btn-ghost { font-family: var(--font-display); font-size: 1.04rem; letter-spacing: 0.045em; }
+html[dir="rtl"] :is(.btn-gold, .btn-ghost) { font-family: var(--font-ar-ui); font-size: 0.95rem; letter-spacing: 0; }
+.btn-gold { box-shadow: 0 10px 30px -10px rgba(212, 175, 55, 0.75), 0 0 0 1px rgba(255, 244, 214, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.6); }
+.btn-gold:hover { box-shadow: 0 16px 44px -10px rgba(212, 175, 55, 0.95), 0 0 0 1px rgba(255, 244, 214, 0.6), 0 0 34px -6px rgba(111, 232, 255, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.6); }
+.btn-ghost { color: var(--gold-100); background: rgba(70, 140, 255, 0.07); border-color: rgba(110, 180, 255, 0.42); }
+.btn-ghost:hover { background: rgba(70, 140, 255, 0.15); border-color: rgba(130, 195, 255, 0.85); box-shadow: 0 0 28px -6px rgba(80, 150, 255, 0.8), 0 0 0 1px rgba(236, 208, 138, 0.2); }
+.icon-btn { border-color: rgba(130, 235, 215, 0.22); background: rgba(90, 225, 200, 0.04); }
+.icon-btn:hover { border-color: rgba(150, 245, 230, 0.65); background: rgba(90, 225, 200, 0.12); box-shadow: 0 0 18px -6px rgba(111, 232, 255, 0.7); }
+
+/* ---- Titres dhahabiyin: lam3a we7da f d-dkhoul (machi animation dayma = 0 repaint mn ba3d) ---- */
+.gold-text {
+  background: linear-gradient(100deg, var(--gold-600) 0%, var(--gold-100) 38%, #dff9ff 50%, var(--gold-300) 62%, var(--gold-600) 100%);
+  background-size: 240% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  animation: goldOnce 2.4s var(--ease-lux) 0.25s 1 both;
+}
+@keyframes goldOnce { from { background-position: 100% 50%; } to { background-position: 18% 50%; } }
+
+/* ---- Bordure dyal ta9a (hover) ---- */
+.nour-border::before {
+  background: conic-gradient(from var(--nour-angle, 0deg), transparent 0deg, rgba(236, 208, 138, 0.95) 55deg, transparent 130deg, transparent 215deg, rgba(111, 232, 255, 0.8) 285deg, transparent 360deg);
+}
+
+/* ---- Zakhrafa dyal l-background ---- */
+.pattern-bg {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='none' stroke='%236fe8d8' stroke-opacity='0.06'%3E%3Cpath d='M40 8l9 23 23 9-23 9-9 23-9-23-23-9 23-9z'/%3E%3Crect x='22' y='22' width='36' height='36' transform='rotate(45 40 40)'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+
+/* =====================================================================================
+   MOTEUR DYAL LES CARTES v2 — 3D, dow, w 7araka m3a scroll (FxPointer.tsx kay-3ti l-variables)
+   Kolchi transform / opacity (compositor) -> bla lag. Kay-t9ad m3a data-perf l-ta7t.
+   ===================================================================================== */
+/* (1) Souris: l-carte kat-mil m3a l-curseur, w d-dell kay-t7errek 3ks d-dow */
+.fx-card[data-fx-hot] {
+  transform: perspective(1100px) rotateX(calc(var(--fx-y, 0) * var(--fx-amp, 0) * -1deg)) rotateY(calc(var(--fx-x, 0) * var(--fx-amp, 0) * 1deg)) !important;
+  transition: transform 0.22s ease-out, translate 0.45s var(--ease-lux), scale 0.2s var(--ease-lux), box-shadow 0.3s ease-out, border-color 0.45s;
+  z-index: 2;
+}
+@media (hover: hover) {
+  .fx-card[data-fx-hot]:hover {
+    box-shadow:
+      0 0 0 1px rgba(236, 208, 138, 0.2),
+      calc(var(--fx-x, 0) * -18px) calc(22px + var(--fx-y, 0) * -14px) 56px -24px rgba(60, 140, 255, 0.8),
+      var(--shadow-deep), inset 0 1px 0 rgba(170, 255, 238, 0.16);
+  }
+}
+/* (2) Parallax: l-icônes w l-3anasir "pop" kay-tel3ou fo9 l-carte */
+.fx-card[data-fx-hot] :is(.fx-icon, .fx-pop) {
+  translate: calc(var(--fx-x, 0) * 8px) calc(var(--fx-y, 0) * 8px);
+  transition: translate 0.22s ease-out, transform 0.5s var(--ease-lux), filter 0.5s;
+}
+/* (3) Dow: spotlight t7t l-curseur + lam3a kat-douz mli kat-dkhol souris; f téléphone kay-ban t7t s-sba3 */
+.fx-card::after {
+  background:
+    radial-gradient(300px circle at var(--px, 50%) var(--py, 50%), rgba(130, 200, 255, 0.16), rgba(236, 208, 138, 0.05) 45%, transparent 70%),
+    linear-gradient(112deg, transparent 42%, rgba(255, 255, 255, 0.08) 50%, transparent 58%) 130% 0 / 260% 100% no-repeat;
+  transition: opacity 0.4s, background-position 1s var(--ease-lux);
+}
+@media (hover: hover) { .fx-card:hover::after { background-position: 0 0, -30% 0; } }
+@media (hover: none) { .fx-card:active::after { opacity: 1; transition-duration: 0.08s; } }
+
+/* (4) Scroll: kol carte kat-tla3 mn l-ta7t b mil 3D (animation mrbouta b scroll, machi b l-wa9t).
+   :where() -> ay animation dyal l-module kat-ghleb. backwards -> mn ba3d d-dkhoul ma kat-7kemch f walou. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    :where(.fx-card:not([data-fx-still])) {
+      animation: fxRise linear backwards;
+      animation-timeline: view();
+      animation-range: entry 0% entry 90%;
+    }
+  }
+}
+@keyframes fxRise {
+  from { transform: perspective(1100px) rotateX(11deg) translateY(34px) scale(0.94); opacity: 0.35; }
+  to { transform: perspective(1100px) rotateX(0deg) translateY(0) scale(1); opacity: 1; }
+}
+
+/* (5) Mobile: .fx-rail = s-saff dyal les cartes kay-wlli carrousel 3D (coverflow) b l-lamsa.
+   .fx-rail2 = nefs l-7aja b jouj stour (l les cartes sghar). */
+@media (max-width: 700px) {
+  :is(.fx-rail, .fx-rail2) {
+    display: grid !important;
+    grid-auto-flow: column;
+    grid-template-columns: none !important;
+    grid-auto-columns: min(78%, 320px);
+    gap: 12px !important;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    margin-inline: -14px;
+    padding: 10px 14px 16px;
+    scrollbar-width: none;
+  }
+  .fx-rail2 { grid-template-rows: repeat(2, auto); grid-auto-columns: 46%; }
+  :is(.fx-rail, .fx-rail2)::-webkit-scrollbar { display: none; }
+  :is(.fx-rail, .fx-rail2) > * { scroll-snap-align: center; min-width: 0; }
+}
+@supports (animation-timeline: view()) {
+  @media (max-width: 700px) and (prefers-reduced-motion: no-preference) {
+    .fx-rail > * { animation: fxCover linear both; animation-timeline: view(inline); }
+  }
+}
+@keyframes fxCover {
+  0% { transform: perspective(900px) rotateY(-26deg) scale(0.86); opacity: 0.55; }
+  50% { transform: perspective(900px) rotateY(0deg) scale(1); opacity: 1; }
+  100% { transform: perspective(900px) rotateY(26deg) scale(0.86); opacity: 0.55; }
+}
+
 /* ================= Performance: l-app kat-khfef 7sab l-jihaz (data-perf 3la <html>) =================
    medium: bla blur dyal l-background (ghali bezzaf f téléphone) w bla animations dayma dyal d-décor
    low   : zid 3lihom: bla ombres kbar, bla halos, w les cartes li barra l-écran ma kay-t-rendrawch */
@@ -327,3 +484,5 @@ html[data-perf="low"] body { background: var(--bg-0); }
 html[data-perf="low"] * { text-shadow: none !important; }
 html:is([data-perf="medium"], [data-perf="low"]) .nour-border::before { animation: none !important; }
 html:is([data-perf="medium"], [data-perf="low"]) [class*="sheen"]::before { animation: none !important; }
+html[data-perf="low"] :is(.fx-card, .fx-rail > *) { animation: none !important; }
+html[data-perf="low"] .fx-card[data-fx-hot] { transform: none !important; }

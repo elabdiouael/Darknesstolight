@@ -48,7 +48,7 @@ const Reveal = ({ text, className, delay = 0 }: { text: string; className?: stri
   <span className={className}>
     {text.split(" ").map((w, i) => (
       <span key={i} className={styles.word}>
-        <motion.span initial={{ y: "110%" }} animate={{ y: 0 }} transition={{ duration: 0.9, delay: delay + i * 0.08, ease: EASE }}>{w}</motion.span>{" "}
+        <motion.span initial={{ y: "110%" }} animate={{ y: 0 }} transition={{ duration: 0.9, delay: delay + i * 0.08, ease: EASE }}>{w}</motion.span>
       </span>
     ))}
   </span>
@@ -162,7 +162,7 @@ export const HomeView = () => {
         <motion.div className={`${styles.astro} ${isNight ? styles.night : ""}`} ref={astro} initial={{ opacity: 0, scale: 0.85 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1.3, delay: 0.2, ease: EASE }}>
           <div className={styles.scene}>
             <span className={styles.disc} aria-hidden style={{
-              background: `conic-gradient(from 180deg, rgba(4,16,11,0.9) 0deg, rgba(4,16,11,0.9) ${angle(times.fajr?.getTime() ?? dayStart) - 90}deg, rgba(212,175,55,0.22) ${angle(times.sunrise?.getTime() ?? dayStart) - 90}deg, rgba(243,220,154,0.3) 180deg, rgba(212,175,55,0.22) ${angle(times.maghrib?.getTime() ?? dayStart) - 90}deg, rgba(4,16,11,0.9) ${angle(times.isha?.getTime() ?? dayStart) - 90}deg, rgba(4,16,11,0.9) 360deg)`,
+              background: `conic-gradient(from 180deg, rgba(4,16,11,0.42) 0deg, rgba(4,16,11,0.42) ${angle(times.fajr?.getTime() ?? dayStart) - 90}deg, rgba(212,175,55,0.22) ${angle(times.sunrise?.getTime() ?? dayStart) - 90}deg, rgba(243,220,154,0.3) 180deg, rgba(212,175,55,0.22) ${angle(times.maghrib?.getTime() ?? dayStart) - 90}deg, rgba(4,16,11,0.42) ${angle(times.isha?.getTime() ?? dayStart) - 90}deg, rgba(4,16,11,0.42) 360deg)`,
             }} />
             <span className={`${styles.ring} ${styles.r1}`} aria-hidden />
             <span className={`${styles.ring} ${styles.r2}`} aria-hidden />

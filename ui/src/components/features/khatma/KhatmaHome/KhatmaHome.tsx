@@ -19,8 +19,8 @@ import { AdhkarNow } from "@/components/features/adhkar/AdhkarNow/AdhkarNow";
 import styles from "./KhatmaHome.module.css";
 
 const fadeUp = {
-  hidden: { opacity: 0, y: 26, filter: "blur(8px)" },
-  show: (i: number) => ({ opacity: 1, y: 0, filter: "blur(0px)", transition: { delay: i * 0.08, duration: 0.8, ease: [0.22, 1, 0.36, 1] as const } }),
+  hidden: { opacity: 0, y: 26 },
+  show: (i: number) => ({ opacity: 1, y: 0, transition: { delay: i * 0.08, duration: 0.8, ease: [0.22, 1, 0.36, 1] as const } }),
 };
 
 export const KhatmaHome = () => {
@@ -126,7 +126,7 @@ export const KhatmaHome = () => {
       <AyahOfDay />
 
       {list === null ? (
-        <div className={styles.grid}>
+        <div className={`fx-rail ${styles.grid}`}>
           {[0, 1, 2].map((i) => <div key={i} className={styles.skeleton} />)}
         </div>
       ) : list.length === 0 ? (
@@ -139,7 +139,7 @@ export const KhatmaHome = () => {
           <button className="btn-gold" onClick={() => setCreateOpen(true)}><Plus size={18} /> {t("home.new")}</button>
         </motion.div>
       ) : (
-        <div className={styles.grid}>
+        <div className={`fx-rail ${styles.grid}`}>
           {list.map((k, i) => <KhatmaCard key={k.id} khatma={k} index={i} />)}
         </div>
       )}

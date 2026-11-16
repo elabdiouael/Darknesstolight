@@ -113,7 +113,7 @@ export const AdhkarHome = () => {
         <AnimatePresence mode="wait">
           <motion.div key={tab} initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.35, ease: EASE }}>
             {tab === "categories" && (
-              <div className={styles.grid}>
+              <div className={`fx-rail ${styles.grid}`}>
                 {ADHKAR.map((c, i) => <CatCard key={c.id} c={c} i={i} onEdit={openEdit} />)}
                 {custom.list.map((c, i) => <CatCard key={c.id} c={c} i={ADHKAR.length + i} onEdit={openEdit} />)}
                 <NewCard onClick={() => openNew()} />
@@ -128,7 +128,7 @@ export const AdhkarHome = () => {
                   <button className="btn-gold" onClick={() => openNew()}><Plus size={16} /> {t("custom.new")}</button>
                 </div>
               ) : (
-                <div className={styles.grid}>
+                <div className={`fx-rail ${styles.grid}`}>
                   {custom.list.map((c, i) => <CatCard key={c.id} c={c} i={i} onEdit={openEdit} />)}
                   <NewCard onClick={() => openNew()} />
                 </div>
@@ -146,7 +146,7 @@ export const AdhkarHome = () => {
         {favItems.length === 0 ? (
           <p className={`glass-panel ${styles.empty}`}>{t("adhkar.favorites.empty")}</p>
         ) : (
-          <div className={styles.favs}>
+          <div className={`fx-rail ${styles.favs}`}>
             {favItems.map(({ cat, item, idx }) => (
               <Link key={`${cat.id}:${item.id}`} href={`/adhkar/${cat.id}?i=${idx}`} className={`glass-panel fx-card ${styles.fav}`} style={{ ["--h" as string]: cat.hue }}>
                 <span className={styles.favCat}>{pick(cat.title, lang)} · ×{item.count}</span>
@@ -176,7 +176,7 @@ const CatCard = ({ c, i, onEdit }: { c: AdhkarCategory; i: number; onEdit: (c: C
     <motion.div initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-40px" }}
       transition={{ duration: 0.7, delay: Math.min(i, 8) * 0.05, ease: EASE }} className={styles.catWrap}>
       <Tilt3D className={styles.tilt} max={9} depth={24}>
-        <Link href={`/adhkar/${c.id}`} className={`${styles.cat} ${done ? styles.catDone : ""}`} style={{ ["--h" as string]: c.hue }}>
+        <Link href={`/adhkar/${c.id}`} className={`fx-card ${styles.cat} ${done ? styles.catDone : ""}`} style={{ ["--h" as string]: c.hue }}>
           <span className={styles.catShine} aria-hidden />
           <span className={styles.catIcon}><Icon size={22} /></span>
           {done && <span className={styles.catCheck}><Check size={14} /></span>}

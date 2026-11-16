@@ -134,7 +134,7 @@ export const DuaView = () => {
       {/* ===== Aw9at l-ijaba ===== */}
       <section>
         <h2 className={styles.h2}>{t("dua.times")}</h2>
-        <div className={styles.times}>
+        <div className={`fx-rail ${styles.times}`}>
           {times.map((x, i) => (
             <motion.div key={x.title} className={`glass-panel fx-card ${styles.timeCard} ${x.active ? styles.timeOn : ""}`}
               initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: i * 0.05, ease: EASE }}>

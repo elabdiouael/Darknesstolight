@@ -448,7 +448,7 @@ export const SalatView = () => {
           </div>
         </div>
         {shownHadiths.length === 0 && <p className={styles.note}>{t("hadith.none")}</p>}
-        <div className={styles.hadiths}>
+        <div className={`fx-rail ${styles.hadiths}`}>
           {shownHadiths.map((h, i) => (
             <motion.article key={h.id} className={`glass-panel fx-card ${styles.hadith}`}
               initial={{ opacity: 0, y: 18 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-30px" }} transition={{ duration: 0.55, delay: (i % 3) * 0.06, ease: EASE }}>

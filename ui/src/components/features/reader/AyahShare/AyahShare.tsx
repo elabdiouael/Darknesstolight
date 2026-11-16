@@ -60,7 +60,7 @@ const draw = async (canvas: HTMLCanvasElement, opts: {
   try {
     await Promise.all([
       document.fonts.load('64px "Amiri Quran"'),
-      document.fonts.load('600 40px "Cormorant Garamond"'),
+      document.fonts.load('600 40px "Rajdhani"'),
       document.fonts.load('700 30px "Manrope"'),
     ]);
   } catch { /* fonts dyal système */ }
@@ -127,7 +127,7 @@ const draw = async (canvas: HTMLCanvasElement, opts: {
     let ts = 36;
     let tl: string[] = [];
     for (; ts >= 22; ts -= 2) {
-      ctx.font = `italic 600 ${ts}px "Cormorant Garamond", serif`;
+      ctx.font = `600 ${ts}px "Rajdhani", sans-serif`;
       tl = wrap(ctx, `« ${opts.verse.translation} »`, W - 240);
       if (tl.length * ts * 1.45 <= 300) break;
     }
@@ -141,7 +141,7 @@ const draw = async (canvas: HTMLCanvasElement, opts: {
   ctx.font = '700 30px "Manrope", sans-serif';
   ctx.fillText(`${opts.surahLabel} · ${opts.ayahLabel}`, W / 2, H - 150);
   ctx.globalAlpha = 0.6;
-  ctx.font = '600 26px "Cormorant Garamond", serif';
+  ctx.font = '600 26px "Rajdhani", sans-serif';
   ctx.fillText("✦ From Darknesses to Light ✦", W / 2, H - 104);
   ctx.globalAlpha = 1;
 };

@@ -30,8 +30,10 @@ const FLIPS: PageFlip[] = ["book", "slide", "fade", "none"];
 const HIDES: HideMode[] = ["off", "first", "all"];
 const ALIGNS: ReaderPrefs["align"][] = ["justify", "center"];
 
-export const ReaderSettings = ({ prefs, onChange, onReset, canSpread }: {
+export const ReaderSettings = ({ prefs, onChange, onReset, canSpread, rail }: {
   prefs: ReaderPrefs; onChange: (p: Partial<ReaderPrefs>) => void; onReset: () => void; canSpread: boolean;
+  /** F l-rail dyal l-mushaf: l-bouton icone, w l-panel kay-t7ell 7da l-rail (classes mn l-parent) */
+  rail?: { wrap: string; trigger: string; active: string; panel: string };
 }) => {
   const { t } = useI18n();
   const [open, setOpen] = useState(false);
@@ -113,13 +115,19 @@ export const ReaderSettings = ({ prefs, onChange, onReset, canSpread }: {
   );
 
   return (
-    <div className={styles.wrap} ref={box}>
-      <button className={`btn-ghost ${open ? styles.on : ""}`} onClick={toggle} aria-expanded={open}>
-        <SlidersHorizontal size={16} /> <span className={styles.hideSm}>{t("settings.title")}</span>
-      </button>
+    <div className={rail ? rail.wrap : styles.wrap} ref={box}>
+      {rail ? (
+        <button className={`${rail.trigger} ${open ? rail.active : ""}`} onClick={() => setOpen((v) => !v)} aria-expanded={open} aria-label={t("settings.title")}>
+          <SlidersHorizontal size={19} /><span>{t("settings.title")}</span>
+        </button>
+      ) : (
+        <button className={`btn-ghost ${open ? styles.on : ""}`} onClick={toggle} aria-expanded={open}>
+          <SlidersHorizontal size={16} /> <span className={styles.hideSm}>{t("settings.title")}</span>
+        </button>
+      )}
       <AnimatePresence>
         {open && (
-          <motion.div className={styles.panel} role="dialog" aria-label={t("settings.title")} style={{ left: shift, right: "auto" }}
+          <motion.div className={`${styles.panel} ${rail ? rail.panel : ""}`} role="dialog" aria-label={t("settings.title")} style={rail ? undefined : { left: shift, right: "auto" }}
             initial={{ opacity: 0, y: -8, scale: 0.97 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -8, scale: 0.97 }}
             transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}>
             <span className={styles.label}>{t("settings.theme")}</span>

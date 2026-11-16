@@ -1,0 +1,8 @@
+node_modules
+*.mp4
+*.wav
+still-*.png
+sheet-*.png
+montage-timeline.json
+still-*.jpg
+render.log

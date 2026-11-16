@@ -111,7 +111,7 @@ export const ProfileView = () => {
         {shown.length === 0 ? (
           <p className={styles.empty}>{t("profile.empty")}</p>
         ) : (
-          <motion.div layout className={styles.grid}>
+          <motion.div layout className={`fx-rail ${styles.grid}`}>
             <AnimatePresence>
               {shown.map((k, i) => (
                 <motion.div key={k.id} layout exit={{ opacity: 0, scale: 0.9 }}>
@@ -139,7 +139,7 @@ export const ProfileView = () => {
         {hifd.length === 0 ? (
           <p className={styles.empty}>{t("profile.hifd.empty")}</p>
         ) : (
-          <div className={styles.hifdGrid}>
+          <div className={`fx-rail ${styles.hifdGrid}`}>
             {hifd.map((h, i) => {
               const s = getSurah(h.surah);
               const pct = (h.count / s.verses) * 100;
@@ -169,7 +169,7 @@ export const ProfileView = () => {
         {khawatir.length === 0 ? (
           <p className={styles.empty}>{t("profile.khawatir.empty")}</p>
         ) : (
-          <div className={styles.notes}>
+          <div className={`fx-rail ${styles.notes}`}>
             <AnimatePresence>
               {khawatir.map((k, i) => (
                 <motion.article key={k.id} layout className={`glass-panel fx-card ${styles.note}`}

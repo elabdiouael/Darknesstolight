@@ -33,16 +33,15 @@ export const applyStudioEnvironment = (renderer: THREE.WebGLRenderer, scene: THR
   return env;
 };
 
+// MeshStandard f blast MeshPhysical + clearcoat: nefs l-chkel ta9riban, w 9ell mn nos l-7sab f kol pixel
 export const goldMaterial = (opacity = 1) =>
-  new THREE.MeshPhysicalMaterial({
-    color: 0xd9b24a,
+  new THREE.MeshStandardMaterial({
+    color: 0xdcb44c,
     metalness: 1,
-    roughness: 0.22,
-    clearcoat: 0.6,
-    clearcoatRoughness: 0.2,
+    roughness: 0.2,
     emissive: 0x2a1c02,
-    emissiveIntensity: 0.6,
-    envMapIntensity: 1.4,
+    emissiveIntensity: 0.7,
+    envMapIntensity: 1.5,
     transparent: opacity < 1,
     opacity,
   });
@@ -54,7 +53,7 @@ export const createNourParticles = (count: number, spread: [number, number, numb
   const scale = new Float32Array(count);
   const phase = new Float32Array(count);
   const speed = new Float32Array(count);
-  const palette = [new THREE.Color(0xecd08a), new THREE.Color(0xfff4d6), new THREE.Color(0x5fd3a0), new THREE.Color(0xd4af37)];
+  const palette = [new THREE.Color(0xecd08a), new THREE.Color(0xfff4d6), new THREE.Color(0x6fb6ff), new THREE.Color(0xd4af37)];
   for (let i = 0; i < count; i++) {
     pos[i * 3] = (Math.random() - 0.5) * spread[0];
     pos[i * 3 + 1] = (Math.random() - 0.5) * spread[1];
@@ -294,7 +293,7 @@ export const createGirihFloor = (size = 90, opacity = 0.5) => {
         float spot = smoothstep(0.085, 0.0, distance(vUv, uMouse)) * uMouseOn;
         float wave = smoothstep(0.016, 0.0, abs(distance(vUv, uPulseO) - uPulseT * 0.42)) * (1.0 - uPulseT);
         float lit = spot * 2.4 + wave * 3.2;
-        vec3 col = mix(uColor, vec3(1.0, 0.95, 0.8), clamp(lit * 0.35, 0.0, 0.7));
+        vec3 col = mix(mix(uColor, vec3(0.35, 0.62, 1.0), 0.38), vec3(0.75, 0.90, 1.0), clamp(lit * 0.35, 0.0, 0.7));
         float a = line * fade * pulse * uOpacity * (1.0 + lit) + (spot * 0.05 + wave * 0.1) * fade;
         gl_FragColor = vec4(col, a);
       }
@@ -350,4 +349,172 @@ export const createGlowTexture = () => {
   const t = new THREE.CanvasTexture(c);
   t.colorSpace = THREE.SRGBColorSpace;
   return t;
+};
+/* ======================================================================
+   "3alam akhor": nebula m-bakiya (GPU, merra we7da), kawkab b ghilaf jawwi,
+   7al9a dyal ta9a
+   ====================================================================== */
+
+/**
+ * Nebula: fbm b domain-warping kay-t-rendra MERRA WE7DA f texture (render target).
+ * Mn ba3d kat-ban ghir ka texture f jouj plans (parallax) -> ta9riban 0 taman f kol frame.
+ */
+export const createNebula = (renderer: THREE.WebGLRenderer, width = 1024, height = 512) => {
+  const target = new THREE.WebGLRenderTarget(width, height, { depthBuffer: false });
+  target.texture.wrapS = target.texture.wrapT = THREE.MirroredRepeatWrapping;
+  const bake = new THREE.ShaderMaterial({
+    uniforms: { uSeed: { value: new THREE.Vector2(Math.random() * 40, Math.random() * 40) } },
+    vertexShader: /* glsl */ `varying vec2 vUv; void main() { vUv = uv; gl_Position = vec4(position.xy, 0.0, 1.0); }`,
+    fragmentShader: /* glsl */ `
+      precision highp float;
+      uniform vec2 uSeed;
+      varying vec2 vUv;
+      float hash(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
+      float noise(vec2 p) {
+        vec2 i = floor(p), f = fract(p);
+        vec2 u = f * f * (3.0 - 2.0 * f);
+        return mix(mix(hash(i), hash(i + vec2(1.0, 0.0)), u.x), mix(hash(i + vec2(0.0, 1.0)), hash(i + vec2(1.0, 1.0)), u.x), u.y);
+      }
+      float fbm(vec2 p) {
+        float v = 0.0, a = 0.5;
+        for (int i = 0; i < 6; i++) { v += a * noise(p); p = p * 2.03 + vec2(17.3, 9.1); a *= 0.5; }
+        return v;
+      }
+      void main() {
+        vec2 p = vUv * vec2(4.0, 2.0) + uSeed;
+        vec2 q = vec2(fbm(p + 1.7), fbm(p + vec2(5.2, 1.3)));
+        float n = fbm(p + 2.4 * q);
+        float m = fbm(p * 1.7 - q * 1.6 + 3.1);
+        float v = fbm(p * 0.8 + q + 8.0);
+        vec3 col = vec3(0.0);
+        // n / m / v f [0,1]: kan-clampiw 9bel l-pow bach 7ta seed ma y-7re9 s-sma
+        float cn = clamp(n, 0.0, 1.0), cm = clamp(m, 0.0, 1.0), cv = clamp(v, 0.0, 1.0);
+        col += vec3(0.02, 0.20, 0.30) * pow(cn, 3.0) * 0.9;
+        col += vec3(0.04, 0.22, 0.75) * pow(cm, 3.0) * 1.25;
+        col += vec3(0.02, 0.10, 0.34) * pow(clamp(1.0 - cn, 0.0, 1.0), 2.0) * 0.18;
+        col += vec3(0.55, 0.38, 0.12) * pow(clamp(cn * cm * 2.0, 0.0, 1.0), 4.0) * 0.5;
+        col += vec3(0.16, 0.14, 0.62) * pow(cv, 4.0) * 0.7;
+        // Courbe douce: s-sma kat-b9a ghamqa (l-contenu howa li khasso yban)
+        col = col / (1.0 + col * 2.2) * 0.9;
+        vec2 g = vUv * vec2(760.0, 380.0);
+        float h = hash(floor(g));
+        float star = step(0.9962, h) * smoothstep(0.5, 0.05, length(fract(g) - 0.5));
+        col += mix(vec3(0.75, 0.88, 1.0), vec3(1.0, 0.92, 0.72), fract(h * 91.0)) * star * (0.25 + 0.5 * fract(h * 37.0));
+        gl_FragColor = vec4(col, 1.0);
+      }
+    `,
+  });
+  const quad = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), bake);
+  const bakeScene = new THREE.Scene();
+  bakeScene.add(quad);
+  const prev = renderer.getRenderTarget();
+  renderer.setRenderTarget(target);
+  renderer.render(bakeScene, new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1));
+  renderer.setRenderTarget(prev);
+  quad.geometry.dispose();
+  bake.dispose();
+
+  /** Plan kay-werri n-nebula (additive) b décalage / échelle / dawra dyalo */
+  const layer = (scale: number, opacity: number) => {
+    const material = new THREE.ShaderMaterial({
+      // transparent: false -> passe opaque, l-wla f t-tartib: l-kawkab w l-portail kay-ghettiwha (9bel kanet kat-trsem fo9hom)
+      transparent: false, depthWrite: false, depthTest: false, blending: THREE.AdditiveBlending,
+      uniforms: { uMap: { value: target.texture }, uOffset: { value: new THREE.Vector2() }, uScale: { value: scale }, uRot: { value: 0 }, uOpacity: { value: opacity } },
+      vertexShader: /* glsl */ `varying vec2 vUv; void main() { vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }`,
+      fragmentShader: /* glsl */ `
+        uniform sampler2D uMap; uniform vec2 uOffset; uniform float uScale; uniform float uRot; uniform float uOpacity;
+        varying vec2 vUv;
+        void main() {
+          vec2 c = (vUv - 0.5) * uScale;
+          float s = sin(uRot), k = cos(uRot);
+          vec2 uv = vec2(c.x * k - c.y * s, c.x * s + c.y * k) + 0.5 + uOffset;
+          float fade = smoothstep(0.62, 0.2, length(vUv - 0.5));
+          gl_FragColor = vec4(texture2D(uMap, uv).rgb * uOpacity * fade, 1.0);
+        }
+      `,
+    });
+    const mesh = new THREE.Mesh(new THREE.PlaneGeometry(190, 100), material);
+    mesh.renderOrder = -100;
+    mesh.frustumCulled = false;
+    return { mesh, material };
+  };
+  return { layer, dispose: () => target.dispose() };
+};
+
+/** Kawkab ghamed b hilal m-dwi w ghilaf jawwi (fresnel) + 7al9a dyal ghobar dhahabi */
+export const createPlanet = (radius = 7, glowTex?: THREE.Texture) => {
+  const group = new THREE.Group();
+  const material = new THREE.ShaderMaterial({
+    uniforms: { uLight: { value: new THREE.Vector3(1, 0, 0) }, uTime: { value: 0 }, uGain: { value: 1 } },
+    vertexShader: /* glsl */ `
+      varying vec3 vN; varying vec3 vV; varying vec3 vP;
+      void main() {
+        vec4 mv = modelViewMatrix * vec4(position, 1.0);
+        vN = normalize(normalMatrix * normal); vV = normalize(-mv.xyz); vP = position;
+        gl_Position = projectionMatrix * mv;
+      }
+    `,
+    fragmentShader: /* glsl */ `
+      uniform vec3 uLight; uniform float uTime; uniform float uGain;
+      varying vec3 vN; varying vec3 vV; varying vec3 vP;
+      void main() {
+        float ndl = max(dot(vN, uLight), 0.0);
+        float fres = pow(1.0 - max(dot(vN, vV), 0.0), 2.6);
+        float band = sin(vP.y * 1.5 + sin(vP.x * 0.7 + uTime * 0.03) * 1.3) * 0.5 + 0.5;
+        vec3 base = mix(vec3(0.010, 0.045, 0.040), vec3(0.030, 0.130, 0.105), band);
+        vec3 col = base * (0.10 + ndl * 0.9) + vec3(0.95, 0.72, 0.30) * pow(ndl, 3.0) * 0.12;
+        col += vec3(0.20, 0.55, 1.00) * fres * (0.22 + ndl) * 0.75;
+        gl_FragColor = vec4(col * uGain, 1.0);
+      }
+    `,
+  });
+  group.add(new THREE.Mesh(new THREE.SphereGeometry(radius, 56, 36), material));
+
+  const ringMat = new THREE.ShaderMaterial({
+    transparent: true, depthWrite: false, side: THREE.DoubleSide,
+    uniforms: { uInner: { value: radius * 1.38 }, uOuter: { value: radius * 2.15 }, uOpacity: { value: 0.3 } },
+    vertexShader: /* glsl */ `varying vec2 vPos; void main() { vPos = position.xy; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }`,
+    fragmentShader: /* glsl */ `
+      uniform float uInner; uniform float uOuter; uniform float uOpacity;
+      varying vec2 vPos;
+      void main() {
+        float r = (length(vPos) - uInner) / (uOuter - uInner);
+        float lanes = 0.30 + 0.70 * fract(sin(floor(r * 42.0) * 91.7) * 43758.5);
+        float a = smoothstep(0.0, 0.06, r) * smoothstep(1.0, 0.82, r) * lanes;
+        gl_FragColor = vec4(mix(vec3(0.95, 0.80, 0.45), vec3(0.45, 0.90, 0.78), r), a * uOpacity);
+      }
+    `,
+  });
+  const ring = new THREE.Mesh(new THREE.RingGeometry(radius * 1.38, radius * 2.15, 128, 1), ringMat);
+  ring.rotation.set(-1.25, 0.25, 0);
+  group.add(ring);
+
+  if (glowTex) {
+    const halo = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTex, color: 0x3f8cff, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, opacity: 0.16, fog: false }));
+    halo.scale.setScalar(radius * 3.4);
+    halo.position.z = -radius;
+    halo.renderOrder = -5;
+    group.add(halo);
+  }
+  return { group, material, ringMat };
+};
+
+/** 7al9a dyal ta9a: noqta dyal dow kat-dour f t-torus b dnab (comète) */
+export const createEnergyRing = (radius: number, tube = 0.03, color = 0xecd08a) => {
+  const material = new THREE.ShaderMaterial({
+    transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
+    uniforms: { uTime: { value: 0 }, uOpacity: { value: 1 }, uColor: { value: new THREE.Color(color) }, uSpeed: { value: 0.07 } },
+    vertexShader: /* glsl */ `varying vec2 vUv; void main() { vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }`,
+    fragmentShader: /* glsl */ `
+      uniform float uTime; uniform float uOpacity; uniform float uSpeed; uniform vec3 uColor;
+      varying vec2 vUv;
+      void main() {
+        float h = fract(vUv.x - uTime * uSpeed);
+        float h2 = fract(vUv.x - uTime * uSpeed + 0.5);
+        float a = pow(h, 7.0) + pow(h2, 9.0) * 0.6 + 0.10;
+        gl_FragColor = vec4(mix(uColor, vec3(1.0), pow(h, 24.0)), a * uOpacity);
+      }
+    `,
+  });
+  return { mesh: new THREE.Mesh(new THREE.TorusGeometry(radius, tube, 8, 180), material), material };
 };
